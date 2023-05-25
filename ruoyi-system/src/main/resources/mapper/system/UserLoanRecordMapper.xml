@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.UserLoanRecordMapper">
+    
+    <resultMap type="UserLoanRecord" id="UserLoanRecordResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="loanTotalAmount"    column="loan_total_amount"    />
+        <result property="repaymentAmountTotal"    column="repayment_amount_total"    />
+        <result property="annualInterestRate"    column="annual_interest_rate"    />
+        <result property="repaymentPeriodNum"    column="repayment_period_num"    />
+        <result property="alreadyPaidPeriodNum"    column="already_paid_period_num"    />
+        <result property="repaymentPrincipalEveryPeriod"    column="repayment_principal_every_period"    />
+        <result property="repaymentInterestEveryPeriod"    column="repayment_Interest_every_period"    />
+        <result property="repaymentInterestTotal"    column="repayment_Interest_total"    />
+        <result property="status"    column="status"    />
+        <result property="repaymentTotalAmountEveryPeriod"    column="repayment_total_amount_every_period"    />
+        <result property="userName"    column="user_name"    />
+        <result property="realName"    column="real_name"    />
+        <result property="bankName"    column="bank_name"    />
+        <result property="bankNo"    column="bank_no"    />
+        <result property="bankAddress"    column="bank_address"    />
+        <result property="accountHolder"    column="account_holder"    />
+        <result property="swiftCode"    column="swift_code"    />
+        <result property="routingNumber"    column="routing_number"    />
+    </resultMap>
+
+    <sql id="selectUserLoanRecordVo">
+        select a.id, a.user_id,b.user_name,b.real_name, loan_total_amount, repayment_amount_total, annual_interest_rate, repayment_period_num, already_paid_period_num, repayment_principal_every_period, repayment_Interest_every_period, repayment_Interest_total,repayment_total_amount_every_period,a.status,
+        bank_name, bank_no, bank_address,account_holder,swift_code,routing_number
+        from user_loan_record a
+                 left join user_info b on a.user_id = b.id
+                left join sys_user su on su.user_id = b.sup_id
+    </sql>
+
+    <select id="selectUserLoanRecordList" parameterType="UserLoanRecord" resultMap="UserLoanRecordResult">
+        <include refid="selectUserLoanRecordVo"/>
+        <where>  
+            <if test="userId != null "> and a.user_id = #{userId}</if>
+            <if test="userName != null "> and b.user_name like concat('%',#{userName},'%')</if>
+            <if test="realName != null "> and b.real_name like concat('%',#{realName},'%')</if>
+            <if test="loanTotalAmount != null "> and a.loan_total_amount = #{loanTotalAmount}</if>
+            <if test="repaymentAmountTotal != null "> and a.repayment_amount_total = #{repaymentAmountTotal}</if>
+            <if test="annualInterestRate != null "> and a.annual_interest_rate = #{annualInterestRate}</if>
+            <if test="repaymentPeriodNum != null "> and a.repayment_period_num = #{repaymentPeriodNum}</if>
+            <if test="alreadyPaidPeriodNum != null "> and a.already_paid_period_num = #{alreadyPaidPeriodNum}</if>
+            <if test="repaymentPrincipalEveryPeriod != null "> and a.repayment_principal_every_period = #{repaymentPrincipalEveryPeriod}</if>
+            <if test="repaymentInterestEveryPeriod != null "> and a.repayment_Interest_every_period = #{repaymentInterestEveryPeriod}</if>
+            <if test="status != null "> and a.status = #{status}</if>
+            ${params.dataScope}
+        </where>
+        order by field(a.`status`,0) desc,a.id desc
+    </select>
+    
+    <select id="selectUserLoanRecordById" parameterType="Long" resultMap="UserLoanRecordResult">
+        <include refid="selectUserLoanRecordVo"/>
+        where a.id = #{id}
+    </select>
+    <select id="checkUndoneOrder" resultType="java.lang.Integer">
+        select count(1) from user_loan_record where user_id = #{userId} and (status = 0 or status = 1)
+    </select>
+
+    <insert id="insertUserLoanRecord" parameterType="UserLoanRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into user_loan_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="loanTotalAmount != null">loan_total_amount,</if>
+            <if test="repaymentAmountTotal != null">repayment_amount_total,</if>
+            <if test="annualInterestRate != null">annual_interest_rate,</if>
+            <if test="repaymentPeriodNum != null">repayment_period_num,</if>
+            <if test="alreadyPaidPeriodNum != null">already_paid_period_num,</if>
+            <if test="repaymentPrincipalEveryPeriod != null">repayment_principal_every_period,</if>
+            <if test="repaymentInterestEveryPeriod != null">repayment_Interest_every_period,</if>
+            <if test="repaymentInterestTotal != null">repayment_Interest_total,</if>
+            <if test="repaymentTotalAmountEveryPeriod != null">repayment_total_amount_every_period,</if>
+            <if test="status != null">status,</if>
+            <if test="bankName != null">bank_name,</if>
+            <if test="bankNo != null">bank_no,</if>
+            <if test="bankAddress != null">bank_address,</if>
+            <if test="accountHolder != null">account_holder,</if>
+            <if test="swiftCode != null">swift_code,</if>
+            <if test="routingNumber != null">routing_number,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="loanTotalAmount != null">#{loanTotalAmount},</if>
+            <if test="repaymentAmountTotal != null">#{repaymentAmountTotal},</if>
+            <if test="annualInterestRate != null">#{annualInterestRate},</if>
+            <if test="repaymentPeriodNum != null">#{repaymentPeriodNum},</if>
+            <if test="alreadyPaidPeriodNum != null">#{alreadyPaidPeriodNum},</if>
+            <if test="repaymentPrincipalEveryPeriod != null">#{repaymentPrincipalEveryPeriod},</if>
+            <if test="repaymentInterestEveryPeriod != null">#{repaymentInterestEveryPeriod},</if>
+            <if test="repaymentInterestTotal != null">#{repaymentInterestTotal},</if>
+            <if test="repaymentTotalAmountEveryPeriod != null">#{repaymentTotalAmountEveryPeriod},</if>
+            <if test="status != null">#{status},</if>
+            <if test="bankName != null">#{bankName},</if>
+            <if test="bankNo != null">#{bankNo},</if>
+            <if test="bankAddress != null">#{bankAddress},</if>
+            <if test="accountHolder != null">#{accountHolder},</if>
+            <if test="swiftCode != null">#{swiftCode},</if>
+            <if test="routingNumber != null">#{routingNumber},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserLoanRecord" parameterType="UserLoanRecord">
+        update user_loan_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="loanTotalAmount != null">loan_total_amount = #{loanTotalAmount},</if>
+            <if test="repaymentAmountTotal != null">repayment_amount_total = #{repaymentAmountTotal},</if>
+            <if test="annualInterestRate != null">annual_interest_rate = #{annualInterestRate},</if>
+            <if test="repaymentPeriodNum != null">repayment_period_num = #{repaymentPeriodNum},</if>
+            <if test="alreadyPaidPeriodNum != null">already_paid_period_num = #{alreadyPaidPeriodNum},</if>
+            <if test="repaymentPrincipalEveryPeriod != null">repayment_principal_every_period = #{repaymentPrincipalEveryPeriod},</if>
+            <if test="repaymentInterestEveryPeriod != null">repayment_Interest_every_period = #{repaymentInterestEveryPeriod},</if>
+            <if test="repaymentInterestTotal != null">repayment_Interest_total = #{repaymentInterestTotal},</if>
+            <if test="repaymentTotalAmountEveryPeriod != null">repayment_total_amount_every_period = #{repaymentTotalAmountEveryPeriod},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="bankName != null">bank_name = #{bankName},</if>
+            <if test="bankNo != null">bank_no = #{bankNo},</if>
+            <if test="bankAddress != null">bank_address = #{bankAddress},</if>
+            <if test="accountHolder != null">account_holder = #{accountHolder},</if>
+            <if test="swiftCode != null">swift_code = #{swiftCode},</if>
+            <if test="routingNumber != null">routing_number = #{routingNumber},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserLoanRecordById" parameterType="Long">
+        delete from user_loan_record where id = #{id}
+    </delete>
+
+    <delete id="deleteUserLoanRecordByIds" parameterType="String">
+        delete from user_loan_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SuperDealsClassificationGoodsMapper">
+    
+    <resultMap type="SuperDealsClassificationGoods" id="SuperDealsClassificationGoodsResult">
+        <result property="id"    column="id"    />
+        <result property="classificationId"    column="classification_id"    />
+        <result property="classificationName"    column="classification_name"    />
+        <result property="shopGoodsInfoId"    column="shop_goods_info_id"    />
+        <result property="goodsName"    column="goods_name"    />
+        <result property="goodsImg"    column="goods_img"    />
+        <result property="shopName"    column="shop_name"    />
+        <result property="shopGoodsInfoId"    column="shop_goods_info_id"    />
+    </resultMap>
+
+    <sql id="selectSuperDealsClassificationGoodsVo">
+        select a.id, classification_id,classification_name, shop_goods_info_id,goods_name,goods_img,shop_name
+        from super_deals_classification_goods a
+                 left join super_deals_classification b
+                           on a.classification_id = b.id
+                 left join shop_goods_info c
+                           on c.id = a.shop_goods_info_id
+                 left join platform_goods_info d
+                           on d.id = goods_id
+                 left join shop_info e
+                           on shop_id = e.id
+    </sql>
+
+    <select id="selectSuperDealsClassificationGoodsList" parameterType="SuperDealsClassificationGoods" resultMap="SuperDealsClassificationGoodsResult">
+        <include refid="selectSuperDealsClassificationGoodsVo"/>
+        <where>  
+            <if test="classificationId != null "> and classification_id = #{classificationId}</if>
+            <if test="shopGoodsInfoId != null "> and shop_goods_info_id = #{shopGoodsInfoId}</if>
+            <if test="goodsName != null "> and goods_name like concat('%',#{goodsName},'%')</if>
+        </where>
+    </select>
+    
+    <select id="selectSuperDealsClassificationGoodsById" parameterType="Long" resultMap="SuperDealsClassificationGoodsResult">
+        <include refid="selectSuperDealsClassificationGoodsVo"/>
+        where a.id = #{id}
+    </select>
+
+
+    <resultMap type="ShopGoodsInfo" id="ShopGoodsInfoResult">
+        <result property="id"    column="id"    />
+        <result property="shopId"    column="shop_id"    />
+        <result property="goodsId"    column="goods_id"    />
+        <result property="goodsName"    column="goods_name"    />
+        <result property="goodsImg"    column="goods_img"    />
+        <result property="minorClass"    column="minor_class"    />
+        <result property="detail"    column="detail"    />
+        <result property="introduce"    column="introduce"    />
+        <result property="singlePrice"    column="platform_price"    />
+        <result property="discountPrice"    column="discount_price"    />
+        <result property="status"    column="status"    />
+        <result property="shopName"    column="shop_name"    />
+        <result property="shopLogo"    column="shop_logo"    />
+        <result property="sellerId"    column="seller_id"    />
+        <result property="shopTel"    column="shop_tel"    />
+        <result property="isFeatured"    column="is_featured"    />
+        <result property="isSpecial"    column="is_special"    />
+    </resultMap>
+    <select id="selectShopGoodsInfoList" parameterType="ShopGoodsInfo" resultMap="ShopGoodsInfoResult">
+        select a.id, shop_id,shop_name,shop_logo,shop_tel, goods_id, goods_name, goods_img,price platform_price,
+        minor_class,detail,introduce ,single_price, a.discount_price, a.status,is_featured,is_special,shop_owner_id seller_id
+        from shop_goods_info a
+        left join platform_goods_info b
+        on goods_id = b.id
+        left join shop_info c
+        on shop_id = c.id
+        <where>
+            <if test="shopId != null "> and shop_id = #{shopId}</if>
+            <if test="goodsName != null  and goodsName != ''"> and goods_name like concat('%', #{goodsName}, '%')</if>
+            <if test="goodsId != null "> and goods_id = #{goodsId}</if>
+            <if test="singlePrice != null "> and single_price = #{singlePrice}</if>
+            <if test="discountPrice != null "> and discount_price = #{discountPrice}</if>
+            <if test="status != null &amp; status != -1"> and a.status = #{status}</if>
+            <if test="status != null &amp; status == -1"> and (a.status = 0 or a.status = 1) </if>
+            <if test="isFeatured != null "> and is_featured = #{isFeatured}</if>
+            <if test="shopStatus != null "> and c.status = #{shopStatus}</if>
+            <if test="platformGoodsStatus != null "> and b.status = #{platformGoodsStatus}</if>
+        </where>
+    </select>
+
+    <insert id="insertSuperDealsClassificationGoods" parameterType="SuperDealsClassificationGoods" useGeneratedKeys="true" keyProperty="id">
+        insert into super_deals_classification_goods
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="classificationId != null">classification_id,</if>
+            <if test="shopGoodsInfoId != null">shop_goods_info_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="classificationId != null">#{classificationId},</if>
+            <if test="shopGoodsInfoId != null">#{shopGoodsInfoId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSuperDealsClassificationGoods" parameterType="SuperDealsClassificationGoods">
+        update super_deals_classification_goods
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="classificationId != null">classification_id = #{classificationId},</if>
+            <if test="shopGoodsInfoId != null">shop_goods_info_id = #{shopGoodsInfoId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSuperDealsClassificationGoodsById" parameterType="Long">
+        delete from super_deals_classification_goods where id = #{id}
+    </delete>
+
+    <delete id="deleteSuperDealsClassificationGoodsByIds" parameterType="String">
+        delete from super_deals_classification_goods where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

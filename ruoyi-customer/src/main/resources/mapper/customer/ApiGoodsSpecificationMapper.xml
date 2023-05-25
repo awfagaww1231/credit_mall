@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.customer.mapper.ApiGoodsSpecificationMapper">
+
+    <resultMap type="ApiSpecificationConfig" id="SpecificationConfigResult">
+        <result property="id"    column="id"    />
+        <result property="specificationName"    column="specification_name"    />
+        <result property="specificationNameEn"    column="specification_name_en"    />
+        <result property="specificationNameTc"    column="specification_name_tc"    />
+        <result property="specificationNameDe"    column="specification_name_de"    />
+        <result property="specificationNameEs"    column="specification_name_es"    />
+        <result property="specificationNameFr"    column="specification_name_fr"    />
+        <result property="specificationNameIdn"    column="specification_name_idn"    />
+        <result property="specificationNameJp"    column="specification_name_jp"    />
+        <result property="specificationNameKo"    column="specification_name_ko"    />
+        <result property="specificationNameMy"    column="specification_name_my"    />
+        <result property="specificationNameTh"    column="specification_name_th"    />
+        <result property="specificationNameVi"    column="specification_name_vi"    />
+        <result property="specificationNamePt"    column="specification_name_pt"    />
+        <result property="specificationNameRus"    column="specification_name_rus"    />
+        <result property="specificationNameBlr"    column="specification_name_blr"    />
+        <result property="specificationNameIda"    column="specification_name_ida"    />
+        <result property="specificationNameSa"    column="specification_name_sa"    />
+        <result property="specificationNameAr"    column="specification_name_ar"    />
+        <result property="specificationNameIt"    column="specification_name_it"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <select id="selectSpecificationConfigsByGoodsId" resultMap="SpecificationConfigResult">
+        select distinct b.id,specification_name, specification_name_en, specification_name_tc, specification_name_de, specification_name_es, specification_name_fr, specification_name_idn, specification_name_jp, specification_name_ko, specification_name_my, specification_name_th, specification_name_vi, specification_name_pt, specification_name_rus, specification_name_blr, specification_name_ida, specification_name_sa, specification_name_ar, specification_name_it,remark
+        from goods_specification a
+                 left join specification_config b
+                           on a.specification_config_id = b.id
+        where goods_id = #{goodsId}
+    </select>
+
+    <resultMap type="ApiSpecificationValue" id="SpecificationValueResult">
+        <result property="id"    column="id"    />
+        <result property="specificationValue"    column="specification_value"    />
+        <result property="goodsSpecificationId"    column="goods_specification_id"    />
+        <result property="specificationValueEn"    column="specification_value_en"    />
+        <result property="specificationValueTc"    column="specification_value_tc"    />
+        <result property="specificationValueDe"    column="specification_value_de"    />
+        <result property="specificationValueEs"    column="specification_value_es"    />
+        <result property="specificationValueFr"    column="specification_value_fr"    />
+        <result property="specificationValueIdn"    column="specification_value_idn"    />
+        <result property="specificationValueJp"    column="specification_value_jp"    />
+        <result property="specificationValueKo"    column="specification_value_ko"    />
+        <result property="specificationValueMy"    column="specification_value_my"    />
+        <result property="specificationValueTh"    column="specification_value_th"    />
+        <result property="specificationValueVi"    column="specification_value_vi"    />
+        <result property="specificationValuePt"    column="specification_value_pt"    />
+        <result property="specificationValueRus"    column="specification_value_rus"    />
+        <result property="specificationValueBlr"    column="specification_value_blr"    />
+        <result property="specificationValueIda"    column="specification_value_ida"    />
+        <result property="specificationValueSa"    column="specification_value_sa"    />
+        <result property="specificationValueAr"    column="specification_value_ar"    />
+        <result property="specificationValueIt"    column="specification_value_it"    />
+    </resultMap>
+
+    <select id="selectSpecificationValues"  resultMap="SpecificationValueResult">
+        select a.id, specification_value,specification_value_en, specification_value_tc, specification_value_de, specification_value_es, specification_value_fr, specification_value_idn, specification_value_jp, specification_value_ko, specification_value_my, specification_value_th, specification_value_vi, specification_value_pt, specification_value_rus, specification_value_blr, specification_value_ida, specification_value_sa, specification_value_ar, specification_value_it, goods_specification_id
+        from goods_specification a
+                 left join specification_value b
+                           on b.id = a.specification_value_id
+        where goods_id = #{goodsId} and specification_config_id = #{specificationConfigId}
+    </select>
+</mapper>

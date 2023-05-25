@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BobiRatioConfigMapper">
+    
+    <resultMap type="BobiRatioConfig" id="BobiRatioConfigResult">
+        <result property="id"    column="id"    />
+        <result property="sellerVipLevel"    column="seller_vip_level"    />
+        <result property="ratio"    column="ratio"    />
+        <result property="days"    column="days"    />
+    </resultMap>
+
+    <sql id="selectBobiRatioConfigVo">
+        select id, seller_vip_level, ratio, days from bobi_ratio_config
+    </sql>
+
+    <select id="selectBobiRatioConfigList" parameterType="BobiRatioConfig" resultMap="BobiRatioConfigResult">
+        <include refid="selectBobiRatioConfigVo"/>
+        <where>  
+            <if test="sellerVipLevel != null "> and seller_vip_level = #{sellerVipLevel}</if>
+            <if test="ratio != null "> and ratio = #{ratio}</if>
+            <if test="days != null "> and days = #{days}</if>
+        </where>
+    </select>
+    
+    <select id="selectBobiRatioConfigById" parameterType="Long" resultMap="BobiRatioConfigResult">
+        <include refid="selectBobiRatioConfigVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBobiRatioConfig" parameterType="BobiRatioConfig" useGeneratedKeys="true" keyProperty="id">
+        insert into bobi_ratio_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sellerVipLevel != null">seller_vip_level,</if>
+            <if test="ratio != null">ratio,</if>
+            <if test="days != null">days,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sellerVipLevel != null">#{sellerVipLevel},</if>
+            <if test="ratio != null">#{ratio},</if>
+            <if test="days != null">#{days},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBobiRatioConfig" parameterType="BobiRatioConfig">
+        update bobi_ratio_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sellerVipLevel != null">seller_vip_level = #{sellerVipLevel},</if>
+            <if test="ratio != null">ratio = #{ratio},</if>
+            <if test="days != null">days = #{days},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBobiRatioConfigById" parameterType="Long">
+        delete from bobi_ratio_config where id = #{id}
+    </delete>
+
+    <delete id="deleteBobiRatioConfigByIds" parameterType="String">
+        delete from bobi_ratio_config where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

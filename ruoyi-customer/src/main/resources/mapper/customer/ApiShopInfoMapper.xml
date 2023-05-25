@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.customer.mapper.ApiShopInfoMapper">
+
+    <resultMap type="ApiShopInfo" id="ShopInfoResult">
+        <result property="id"    column="id"    />
+        <result property="shopName"    column="shop_name"    />
+        <result property="shopNameLang"    column="shop_name_lang"    />
+        <result property="shopLogo"    column="shop_logo"    />
+        <result property="shopTel"    column="shop_tel"    />
+        <result property="shopAddress"    column="shop_address"    />
+        <result property="shopAddressLang"    column="shop_address_lang"    />
+        <result property="receiveAddress"    column="receive_address"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="status"    column="status"    />
+        <result property="shopOwnerId"    column="shop_owner_id"    />
+        <result property="ownerUserName"    column="owner_user_name"    />
+        <result property="ownerNickName"    column="owner_nick_name"    />
+        <result property="ownerEmail"    column="owner_email"    />
+        <result property="ownerTel"    column="owner_tel"    />
+    </resultMap>
+
+    <sql id="selectShopInfoVo">
+        select id, shop_name,shop_name_lang, shop_logo, shop_tel, shop_address,shop_address_lang, receive_address, create_time, update_time, status,
+               shop_owner_id
+        from shop_info
+    </sql>
+
+    <select id="selectShopInfoById" parameterType="Long" resultMap="ShopInfoResult">
+        <include refid="selectShopInfoVo"/>
+        where id = #{id}
+    </select>
+
+</mapper>

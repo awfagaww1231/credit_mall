@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.UserBillDetailsMapper">
+    
+    <resultMap type="UserBillDetails" id="UserBillDetailsResult">
+        <result property="id"    column="id"    />
+        <result property="orderCode"    column="order_code"    />
+        <result property="orderAmount"    column="order_amount"    />
+        <result property="orderType"    column="order_type"    />
+        <result property="orderTime"    column="order_time"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="mobile"    column="mobile"    />
+        <result property="orderClass"    column="order_class"    />
+        <result property="amountBefore"    column="amount_before"    />
+        <result property="amountAfter"    column="amount_after"    />
+    </resultMap>
+
+    <sql id="selectUserBillDetailsVo">
+        select a.id, a.order_code, a.order_amount, a.order_type, a.order_time, a.user_id,
+               b.user_name,b.mobile,a.order_class, a.amount_before, a.amount_after
+        from user_bill_details a
+        left join user_info b on a.user_id = b.id
+        left join sys_user su on b.sup_id = su.user_id
+
+    </sql>
+
+    <select id="selectUserBillDetailsList" parameterType="UserBillDetails" resultMap="UserBillDetailsResult">
+        <include refid="selectUserBillDetailsVo"/>
+        <where>  
+            <if test="orderCode != null  and orderCode != ''"> and a.order_code = #{orderCode}</if>
+            <if test="orderAmount != null "> and a.order_amount = #{orderAmount}</if>
+            <if test="orderType != null "> and a.order_type = #{orderType}</if>
+            <if test="orderTime != null "> and a.order_time = #{orderTime}</if>
+            <if test="userId != null "> and a.user_id = #{userId}</if>
+            <if test="orderClass != null "> and a.order_class = #{orderClass}</if>
+            <if test="amountBefore != null "> and a.amount_before = #{amountBefore}</if>
+            <if test="amountAfter != null "> and a.amount_after = #{amountAfter}</if>
+            <if test="inviteCode != null "> and b.sup_id = #{inviteCode}</if>
+            ${params.dataScope}
+        </where>
+        order by a.id desc
+    </select>
+    
+    <select id="selectUserBillDetailsById" parameterType="Long" resultMap="UserBillDetailsResult">
+        <include refid="selectUserBillDetailsVo"/>
+        where a.id = #{id}
+    </select>
+        
+    <insert id="insertUserBillDetails" parameterType="UserBillDetails" useGeneratedKeys="true" keyProperty="id">
+        insert into user_bill_details
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderCode != null">order_code,</if>
+            <if test="orderAmount != null">order_amount,</if>
+            <if test="orderType != null">order_type,</if>
+            <if test="orderTime != null">order_time,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="orderClass != null">order_class,</if>
+            <if test="amountBefore != null">amount_before,</if>
+            <if test="amountAfter != null">amount_after,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderCode != null">#{orderCode},</if>
+            <if test="orderAmount != null">#{orderAmount},</if>
+            <if test="orderType != null">#{orderType},</if>
+            <if test="orderTime != null">#{orderTime},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="orderClass != null">#{orderClass},</if>
+            <if test="amountBefore != null">#{amountBefore},</if>
+            <if test="amountAfter != null">#{amountAfter},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserBillDetails" parameterType="UserBillDetails">
+        update user_bill_details
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderCode != null">order_code = #{orderCode},</if>
+            <if test="orderAmount != null">order_amount = #{orderAmount},</if>
+            <if test="orderType != null">order_type = #{orderType},</if>
+            <if test="orderTime != null">order_time = #{orderTime},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="orderClass != null">order_class = #{orderClass},</if>
+            <if test="amountBefore != null">amount_before = #{amountBefore},</if>
+            <if test="amountAfter != null">amount_after = #{amountAfter},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserBillDetailsById" parameterType="Long">
+        delete from user_bill_details where id = #{id}
+    </delete>
+
+    <delete id="deleteUserBillDetailsByIds" parameterType="String">
+        delete from user_bill_details where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SpecificationValueMapper">
+    
+    <resultMap type="SpecificationValue" id="SpecificationValueResult">
+        <result property="id"    column="id"    />
+        <result property="goodsSpecificationId"    column="goods_specification_id"    />
+        <result property="specificationValue"    column="specification_value"    />
+        <result property="specificationValueEn"    column="specification_value_en"    />
+        <result property="specificationValueTc"    column="specification_value_tc"    />
+        <result property="specificationValueDe"    column="specification_value_de"    />
+        <result property="specificationValueEs"    column="specification_value_es"    />
+        <result property="specificationValueFr"    column="specification_value_fr"    />
+        <result property="specificationValueIdn"    column="specification_value_idn"    />
+        <result property="specificationValueJp"    column="specification_value_jp"    />
+        <result property="specificationValueKo"    column="specification_value_ko"    />
+        <result property="specificationValueMy"    column="specification_value_my"    />
+        <result property="specificationValueTh"    column="specification_value_th"    />
+        <result property="specificationValueVi"    column="specification_value_vi"    />
+        <result property="specificationValuePt"    column="specification_value_pt"    />
+        <result property="specificationValueRus"    column="specification_value_rus"    />
+        <result property="specificationValueBlr"    column="specification_value_blr"    />
+        <result property="specificationValueIda"    column="specification_value_ida"    />
+        <result property="specificationValueSa"    column="specification_value_sa"    />
+        <result property="specificationValueAr"    column="specification_value_ar"    />
+        <result property="specificationValueIt"    column="specification_value_it"    />
+    </resultMap>
+
+    <sql id="selectSpecificationValueVo">
+        select id, goods_specification_id, specification_value, specification_value_en, specification_value_tc, specification_value_de, specification_value_es, specification_value_fr, specification_value_idn, specification_value_jp, specification_value_ko, specification_value_my, specification_value_th, specification_value_vi, specification_value_pt, specification_value_rus, specification_value_blr, specification_value_ida, specification_value_sa, specification_value_ar, specification_value_it from specification_value
+    </sql>
+
+    <select id="selectSpecificationValueList" parameterType="SpecificationValue" resultMap="SpecificationValueResult">
+        <include refid="selectSpecificationValueVo"/>
+        <where>  
+            <if test="goodsSpecificationId != null "> and goods_specification_id = #{goodsSpecificationId}</if>
+            <if test="specificationValue != null  and specificationValue != ''"> and specification_value = #{specificationValue}</if>
+            <if test="specificationValueEn != null  and specificationValueEn != ''"> and specification_value_en = #{specificationValueEn}</if>
+            <if test="specificationValueTc != null  and specificationValueTc != ''"> and specification_value_tc = #{specificationValueTc}</if>
+            <if test="specificationValueDe != null  and specificationValueDe != ''"> and specification_value_de = #{specificationValueDe}</if>
+            <if test="specificationValueEs != null  and specificationValueEs != ''"> and specification_value_es = #{specificationValueEs}</if>
+            <if test="specificationValueFr != null  and specificationValueFr != ''"> and specification_value_fr = #{specificationValueFr}</if>
+            <if test="specificationValueIdn != null  and specificationValueIdn != ''"> and specification_value_idn = #{specificationValueIdn}</if>
+            <if test="specificationValueJp != null  and specificationValueJp != ''"> and specification_value_jp = #{specificationValueJp}</if>
+            <if test="specificationValueKo != null  and specificationValueKo != ''"> and specification_value_ko = #{specificationValueKo}</if>
+            <if test="specificationValueMy != null  and specificationValueMy != ''"> and specification_value_my = #{specificationValueMy}</if>
+            <if test="specificationValueTh != null  and specificationValueTh != ''"> and specification_value_th = #{specificationValueTh}</if>
+            <if test="specificationValueVi != null  and specificationValueVi != ''"> and specification_value_vi = #{specificationValueVi}</if>
+            <if test="specificationValuePt != null  and specificationValuePt != ''"> and specification_value_pt = #{specificationValuePt}</if>
+            <if test="specificationValueRus != null  and specificationValueRus != ''"> and specification_value_rus = #{specificationValueRus}</if>
+            <if test="specificationValueBlr != null  and specificationValueBlr != ''"> and specification_value_blr = #{specificationValueBlr}</if>
+            <if test="specificationValueIda != null  and specificationValueIda != ''"> and specification_value_ida = #{specificationValueIda}</if>
+            <if test="specificationValueSa != null  and specificationValueSa != ''"> and specification_value_sa = #{specificationValueSa}</if>
+            <if test="specificationValueAr != null  and specificationValueAr != ''"> and specification_value_ar = #{specificationValueAr}</if>
+            <if test="specificationValueIt != null  and specificationValueIt != ''"> and specification_value_it = #{specificationValueIt}</if>
+        </where>
+    </select>
+    
+    <select id="selectSpecificationValueById" parameterType="Long" resultMap="SpecificationValueResult">
+        <include refid="selectSpecificationValueVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSpecificationValue" parameterType="SpecificationValue" useGeneratedKeys="true" keyProperty="id">
+        insert into specification_value
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="goodsSpecificationId != null">goods_specification_id,</if>
+            <if test="specificationValue != null">specification_value,</if>
+            <if test="specificationValueEn != null">specification_value_en,</if>
+            <if test="specificationValueTc != null">specification_value_tc,</if>
+            <if test="specificationValueDe != null">specification_value_de,</if>
+            <if test="specificationValueEs != null">specification_value_es,</if>
+            <if test="specificationValueFr != null">specification_value_fr,</if>
+            <if test="specificationValueIdn != null">specification_value_idn,</if>
+            <if test="specificationValueJp != null">specification_value_jp,</if>
+            <if test="specificationValueKo != null">specification_value_ko,</if>
+            <if test="specificationValueMy != null">specification_value_my,</if>
+            <if test="specificationValueTh != null">specification_value_th,</if>
+            <if test="specificationValueVi != null">specification_value_vi,</if>
+            <if test="specificationValuePt != null">specification_value_pt,</if>
+            <if test="specificationValueRus != null">specification_value_rus,</if>
+            <if test="specificationValueBlr != null">specification_value_blr,</if>
+            <if test="specificationValueIda != null">specification_value_ida,</if>
+            <if test="specificationValueSa != null">specification_value_sa,</if>
+            <if test="specificationValueAr != null">specification_value_ar,</if>
+            <if test="specificationValueIt != null">specification_value_it,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="goodsSpecificationId != null">#{goodsSpecificationId},</if>
+            <if test="specificationValue != null">#{specificationValue},</if>
+            <if test="specificationValueEn != null">#{specificationValueEn},</if>
+            <if test="specificationValueTc != null">#{specificationValueTc},</if>
+            <if test="specificationValueDe != null">#{specificationValueDe},</if>
+            <if test="specificationValueEs != null">#{specificationValueEs},</if>
+            <if test="specificationValueFr != null">#{specificationValueFr},</if>
+            <if test="specificationValueIdn != null">#{specificationValueIdn},</if>
+            <if test="specificationValueJp != null">#{specificationValueJp},</if>
+            <if test="specificationValueKo != null">#{specificationValueKo},</if>
+            <if test="specificationValueMy != null">#{specificationValueMy},</if>
+            <if test="specificationValueTh != null">#{specificationValueTh},</if>
+            <if test="specificationValueVi != null">#{specificationValueVi},</if>
+            <if test="specificationValuePt != null">#{specificationValuePt},</if>
+            <if test="specificationValueRus != null">#{specificationValueRus},</if>
+            <if test="specificationValueBlr != null">#{specificationValueBlr},</if>
+            <if test="specificationValueIda != null">#{specificationValueIda},</if>
+            <if test="specificationValueSa != null">#{specificationValueSa},</if>
+            <if test="specificationValueAr != null">#{specificationValueAr},</if>
+            <if test="specificationValueIt != null">#{specificationValueIt},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSpecificationValue" parameterType="SpecificationValue">
+        update specification_value
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="goodsSpecificationId != null">goods_specification_id = #{goodsSpecificationId},</if>
+            <if test="specificationValue != null">specification_value = #{specificationValue},</if>
+            <if test="specificationValueEn != null">specification_value_en = #{specificationValueEn},</if>
+            <if test="specificationValueTc != null">specification_value_tc = #{specificationValueTc},</if>
+            <if test="specificationValueDe != null">specification_value_de = #{specificationValueDe},</if>
+            <if test="specificationValueEs != null">specification_value_es = #{specificationValueEs},</if>
+            <if test="specificationValueFr != null">specification_value_fr = #{specificationValueFr},</if>
+            <if test="specificationValueIdn != null">specification_value_idn = #{specificationValueIdn},</if>
+            <if test="specificationValueJp != null">specification_value_jp = #{specificationValueJp},</if>
+            <if test="specificationValueKo != null">specification_value_ko = #{specificationValueKo},</if>
+            <if test="specificationValueMy != null">specification_value_my = #{specificationValueMy},</if>
+            <if test="specificationValueTh != null">specification_value_th = #{specificationValueTh},</if>
+            <if test="specificationValueVi != null">specification_value_vi = #{specificationValueVi},</if>
+            <if test="specificationValuePt != null">specification_value_pt = #{specificationValuePt},</if>
+            <if test="specificationValueRus != null">specification_value_rus = #{specificationValueRus},</if>
+            <if test="specificationValueBlr != null">specification_value_blr = #{specificationValueBlr},</if>
+            <if test="specificationValueIda != null">specification_value_ida = #{specificationValueIda},</if>
+            <if test="specificationValueSa != null">specification_value_sa = #{specificationValueSa},</if>
+            <if test="specificationValueAr != null">specification_value_ar = #{specificationValueAr},</if>
+            <if test="specificationValueIt != null">specification_value_it = #{specificationValueIt},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSpecificationValueById" parameterType="Long">
+        delete from specification_value where id = #{id}
+    </delete>
+
+    <delete id="deleteSpecificationValueByIds" parameterType="String">
+        delete from specification_value where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

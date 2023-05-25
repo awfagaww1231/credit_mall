@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.customer.mapper.ApiUserEvaluationMapper">
+
+    <insert id="insertUserEvaluation" parameterType="ApiUserEvaluation" useGeneratedKeys="true" keyProperty="id">
+        insert into user_evaluation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="shopOrderId != null">shop_order_id,</if>
+            <if test="content != null">content,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="shopGoodsInfoId != null">shop_goods_info_id,</if>
+            <if test="score != null">score,</if>
+            <if test="userId != null">user_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="shopOrderId != null">#{shopOrderId},</if>
+            <if test="content != null">#{content},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="shopGoodsInfoId != null">#{shopGoodsInfoId},</if>
+            <if test="score != null">#{score},</if>
+            <if test="userId != null">#{userId},</if>
+        </trim>
+    </insert>
+
+    <resultMap type="ApiUserEvaluation" id="UserEvaluationResult">
+        <result property="id"    column="id"    />
+        <result property="shopOrderId"    column="shop_order_id"    />
+        <result property="content"    column="content"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="shopGoodsInfoId"    column="shop_goods_info_id"    />
+        <result property="score"    column="score"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="avatar"    column="avatar"    />
+    </resultMap>
+
+    <sql id="selectUserEvaluationVo">
+        select a.id, shop_order_id, content, a.create_time, a.shop_goods_info_id, score ,user_id,user_name
+        from user_evaluation a
+                 left join user_info b
+                           on a.user_id = b.id
+    </sql>
+    <select id="selectUserEvaluationList" parameterType="UserEvaluation" resultMap="UserEvaluationResult">
+        <include refid="selectUserEvaluationVo"/>
+        <where>
+            <if test="shopOrderId != null "> and shop_order_id = #{shopOrderId}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="shopGoodsInfoId != null "> and a.shop_goods_info_id = #{shopGoodsInfoId}</if>
+            <if test="score != null "> and score = #{score}</if>
+        </where>
+    </select>
+    <select id="selectNumByScore" resultType="java.lang.Integer">
+        select count(1) from user_evaluation where shop_goods_info_id = #{shopGoodsId} and score = #{score}
+    </select>
+
+    <select id="evaluationListByShopId" parameterType="UserEvaluation" resultMap="UserEvaluationResult">
+        select a.id, shop_order_id, content, a.create_time, a.shop_goods_info_id, score ,user_id,user_name,avatar
+        from user_evaluation a
+                 left join user_info b
+                           on a.user_id = b.id
+                 left join shop_goods_info c
+                           on c.id = a.shop_goods_info_id
+        <where>
+            <if test="shopOrderId != null "> and shop_order_id = #{shopOrderId}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="shopGoodsInfoId != null "> and a.shop_goods_info_id = #{shopGoodsInfoId}</if>
+            <if test="score != null "> and score = #{score}</if>
+            <if test="shopId != null "> and shop_id = #{shopId}</if>
+        </where>
+    </select>
+</mapper>

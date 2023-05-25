@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.GoodsSpecificationMapper">
+    
+    <resultMap type="GoodsSpecification" id="GoodsSpecificationResult">
+        <result property="id"    column="id"    />
+        <result property="goodsId"    column="goods_id"    />
+        <result property="specificationConfigId"    column="specification_config_id"    />
+        <result property="specificationValueId"    column="specification_value_id"    />
+    </resultMap>
+
+    <sql id="selectGoodsSpecificationVo">
+        select id, goods_id, specification_config_id, specification_value_id from goods_specification
+    </sql>
+
+    <select id="selectGoodsSpecificationList" parameterType="GoodsSpecification" resultMap="GoodsSpecificationResult">
+        <include refid="selectGoodsSpecificationVo"/>
+        <where>  
+            <if test="goodsId != null "> and goods_id = #{goodsId}</if>
+            <if test="specificationConfigId != null "> and specification_config_id = #{specificationConfigId}</if>
+            <if test="specificationValueId != null "> and specification_value_id = #{specificationValueId}</if>
+        </where>
+    </select>
+    
+    <select id="selectGoodsSpecificationById" parameterType="Long" resultMap="GoodsSpecificationResult">
+        <include refid="selectGoodsSpecificationVo"/>
+        where id = #{id}
+    </select>
+
+    <resultMap type="SpecificationConfig" id="SpecificationConfigResult">
+        <result property="id"    column="id"    />
+        <result property="specificationName"    column="specification_name"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <select id="selectSpecificationConfigsByGoodsId" resultMap="SpecificationConfigResult">
+        select distinct b.id,specification_name, remark
+        from goods_specification a
+                 left join specification_config b
+                           on a.specification_config_id = b.id
+        where goods_id = #{goodsId}
+    </select>
+
+    <resultMap type="SpecificationValue" id="SpecificationValueResult">
+        <result property="id"    column="id"    />
+        <result property="specificationValue"    column="specification_value"    />
+        <result property="goodsSpecificationId"    column="goods_specification_id"    />
+    </resultMap>
+
+    <select id="selectSpecificationValues"  resultMap="SpecificationValueResult">
+        select b.id, specification_value, goods_specification_id
+        from goods_specification a
+                 left join specification_value b
+                           on b.id = a.specification_value_id
+        where goods_id = #{goodsId} and specification_config_id = #{specificationConfigId}
+        and specification_value is not null
+    </select>
+
+    <select id="selectGoodsSpecification" parameterType="Long" resultMap="GoodsSpecificationResult">
+        <include refid="selectGoodsSpecificationVo"/>
+        where goods_id = #{goodsId} and specification_config_id = #{specificationConfigId} and specification_value_id = #{specificationValueId}
+    </select>
+
+    <insert id="insertGoodsSpecification" parameterType="GoodsSpecification">
+        insert into goods_specification
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="goodsId != null">goods_id,</if>
+            <if test="specificationConfigId != null">specification_config_id,</if>
+            <if test="specificationValueId != null">specification_value_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="goodsId != null">#{goodsId},</if>
+            <if test="specificationConfigId != null">#{specificationConfigId},</if>
+            <if test="specificationValueId != null">#{specificationValueId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGoodsSpecification" parameterType="GoodsSpecification">
+        update goods_specification
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="goodsId != null">goods_id = #{goodsId},</if>
+            <if test="specificationConfigId != null">specification_config_id = #{specificationConfigId},</if>
+            <if test="specificationValueId != null">specification_value_id = #{specificationValueId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteGoodsSpecificationById" parameterType="Long">
+        delete from goods_specification where id = #{id}
+    </delete>
+
+    <delete id="deleteGoodsSpecificationByIds" parameterType="String">
+        delete from goods_specification where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteGoodsSpecificationByGoodsId" parameterType="Long">
+        delete from goods_specification where goods_id = #{goodsId}
+    </delete>
+</mapper>

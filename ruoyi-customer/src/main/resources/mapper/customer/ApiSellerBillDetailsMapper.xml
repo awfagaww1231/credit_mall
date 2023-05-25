@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.customer.mapper.ApiSellerBillDetailsMapper">
+
+    <insert id="insertSellerBillDetails" parameterType="apiSellerBillDetails" useGeneratedKeys="true" keyProperty="id">
+        insert into seller_bill_details
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderCode != null">order_code,</if>
+            <if test="orderAmount != null">order_amount,</if>
+            <if test="orderType != null">order_type,</if>
+            <if test="orderTime != null">order_time,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="orderClass != null">order_class,</if>
+            <if test="amountBefore != null">amount_before,</if>
+            <if test="amountAfter != null">amount_after,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderCode != null">#{orderCode},</if>
+            <if test="orderAmount != null">#{orderAmount},</if>
+            <if test="orderType != null">#{orderType},</if>
+            <if test="orderTime != null">#{orderTime},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="orderClass != null">#{orderClass},</if>
+            <if test="amountBefore != null">#{amountBefore},</if>
+            <if test="amountAfter != null">#{amountAfter},</if>
+        </trim>
+    </insert>
+</mapper>

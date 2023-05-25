@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.RechargeCommissionMapper">
+    
+    <resultMap type="RechargeCommission" id="RechargeCommissionResult">
+        <result property="id"    column="id"    />
+        <result property="superId"    column="super_id"    />
+        <result property="lowerId"    column="lower_id"    />
+        <result property="commissionLevel"    column="commission_level"    />
+        <result property="commissionAmont"    column="commission_amont"    />
+        <result property="commissionProfit"    column="commission_profit"    />
+        <result property="orderCodeSource"    column="order_code_source"    />
+        <result property="orderCodeCommission"    column="order_code_commission"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectRechargeCommissionVo">
+        select id, super_id, lower_id, commission_level, commission_amont, commission_profit, order_code_source, order_code_commission, create_time from recharge_commission
+    </sql>
+
+    <select id="selectRechargeCommissionList" parameterType="RechargeCommission" resultMap="RechargeCommissionResult">
+        <include refid="selectRechargeCommissionVo"/>
+        <where>  
+            <if test="superId != null "> and super_id = #{superId}</if>
+            <if test="lowerId != null "> and lower_id = #{lowerId}</if>
+            <if test="commissionLevel != null "> and commission_level = #{commissionLevel}</if>
+            <if test="commissionAmont != null "> and commission_amont = #{commissionAmont}</if>
+            <if test="commissionProfit != null "> and commission_profit = #{commissionProfit}</if>
+            <if test="orderCodeSource != null  and orderCodeSource != ''"> and order_code_source = #{orderCodeSource}</if>
+            <if test="orderCodeCommission != null  and orderCodeCommission != ''"> and order_code_commission = #{orderCodeCommission}</if>
+        </where>
+    </select>
+    
+    <select id="selectRechargeCommissionById" parameterType="Long" resultMap="RechargeCommissionResult">
+        <include refid="selectRechargeCommissionVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertRechargeCommission" parameterType="RechargeCommission" useGeneratedKeys="true" keyProperty="id">
+        insert into recharge_commission
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="superId != null">super_id,</if>
+            <if test="lowerId != null">lower_id,</if>
+            <if test="commissionLevel != null">commission_level,</if>
+            <if test="commissionAmont != null">commission_amont,</if>
+            <if test="commissionProfit != null">commission_profit,</if>
+            <if test="orderCodeSource != null">order_code_source,</if>
+            <if test="orderCodeCommission != null">order_code_commission,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="superId != null">#{superId},</if>
+            <if test="lowerId != null">#{lowerId},</if>
+            <if test="commissionLevel != null">#{commissionLevel},</if>
+            <if test="commissionAmont != null">#{commissionAmont},</if>
+            <if test="commissionProfit != null">#{commissionProfit},</if>
+            <if test="orderCodeSource != null">#{orderCodeSource},</if>
+            <if test="orderCodeCommission != null">#{orderCodeCommission},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRechargeCommission" parameterType="RechargeCommission">
+        update recharge_commission
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="superId != null">super_id = #{superId},</if>
+            <if test="lowerId != null">lower_id = #{lowerId},</if>
+            <if test="commissionLevel != null">commission_level = #{commissionLevel},</if>
+            <if test="commissionAmont != null">commission_amont = #{commissionAmont},</if>
+            <if test="commissionProfit != null">commission_profit = #{commissionProfit},</if>
+            <if test="orderCodeSource != null">order_code_source = #{orderCodeSource},</if>
+            <if test="orderCodeCommission != null">order_code_commission = #{orderCodeCommission},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRechargeCommissionById" parameterType="Long">
+        delete from recharge_commission where id = #{id}
+    </delete>
+
+    <delete id="deleteRechargeCommissionByIds" parameterType="String">
+        delete from recharge_commission where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

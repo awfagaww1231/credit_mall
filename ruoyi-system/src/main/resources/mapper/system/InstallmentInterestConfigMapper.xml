@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.InstallmentInterestConfigMapper">
+    
+    <resultMap type="InstallmentInterestConfig" id="InstallmentInterestConfigResult">
+        <result property="id"    column="id"    />
+        <result property="repaymentPeriodNum"    column="repayment_period_num"    />
+        <result property="annualInterestRate"    column="annual_interest_rate"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectInstallmentInterestConfigVo">
+        select id, repayment_period_num, annual_interest_rate, status from installment_interest_config
+    </sql>
+
+    <select id="selectInstallmentInterestConfigList" parameterType="InstallmentInterestConfig" resultMap="InstallmentInterestConfigResult">
+        <include refid="selectInstallmentInterestConfigVo"/>
+        <where>  
+            <if test="repaymentPeriodNum != null "> and repayment_period_num = #{repaymentPeriodNum}</if>
+            <if test="annualInterestRate != null "> and annual_interest_rate = #{annualInterestRate}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectInstallmentInterestConfigById" parameterType="Long" resultMap="InstallmentInterestConfigResult">
+        <include refid="selectInstallmentInterestConfigVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertInstallmentInterestConfig" parameterType="InstallmentInterestConfig" useGeneratedKeys="true" keyProperty="id">
+        insert into installment_interest_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="repaymentPeriodNum != null">repayment_period_num,</if>
+            <if test="annualInterestRate != null">annual_interest_rate,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="repaymentPeriodNum != null">#{repaymentPeriodNum},</if>
+            <if test="annualInterestRate != null">#{annualInterestRate},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateInstallmentInterestConfig" parameterType="InstallmentInterestConfig">
+        update installment_interest_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="repaymentPeriodNum != null">repayment_period_num = #{repaymentPeriodNum},</if>
+            <if test="annualInterestRate != null">annual_interest_rate = #{annualInterestRate},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteInstallmentInterestConfigById" parameterType="Long">
+        delete from installment_interest_config where id = #{id}
+    </delete>
+
+    <delete id="deleteInstallmentInterestConfigByIds" parameterType="String">
+        delete from installment_interest_config where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

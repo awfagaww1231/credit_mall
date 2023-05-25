@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CategoryMapper">
+    
+    <resultMap type="Category" id="CategoryResult">
+        <result property="id"    column="id"    />
+        <result property="categoryName"    column="category_name"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="categoryLevel"    column="category_level"    />
+        <result property="sort"    column="sort"    />
+        <result property="isVisible"    column="is_visible"    />
+        <result property="img"    column="img"    />
+        <result property="searchKeyword"    column="search_keyword"    />
+    </resultMap>
+
+    <sql id="selectCategoryVo">
+        select id, category_name,img, parent_id, category_level, sort ,is_visible,search_keyword from category
+    </sql>
+
+    <select id="selectCategoryList" parameterType="Category" resultMap="CategoryResult">
+        <include refid="selectCategoryVo"/>
+        <where>  
+            <if test="categoryName != null  and categoryName != ''"> and category_name like concat('%', #{categoryName}, '%')</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="categoryLevel != null "> and category_level = #{categoryLevel}</if>
+            <if test="sort != null "> and sort = #{sort}</if>
+        </where>
+        order by sort
+    </select>
+
+    <select id="selectCategoryListJsoup" parameterType="Category" resultMap="CategoryResult">
+        <include refid="selectCategoryVo"/>
+        where category_level = 3
+        <if test="list != null">
+            and id in <foreach collection="list" index="index" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        </if>
+        order by id
+    </select>
+    
+    <select id="selectCategoryById" parameterType="Long" resultMap="CategoryResult">
+        <include refid="selectCategoryVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectCategoryByName" parameterType="String" resultMap="CategoryResult">
+        <include refid="selectCategoryVo"/>
+        where category_name = #{name}
+    </select>
+
+    <select id="selectLanguageObject" resultMap="CategoryResult">
+        select category_name, img from category_language
+        where category_id = #{categoryId} and language_id = #{languageId}
+    </select>
+
+    <insert id="insertCategory" parameterType="Category" useGeneratedKeys="true" keyProperty="id">
+        insert into category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="categoryName != null">category_name,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="categoryLevel != null">category_level,</if>
+            <if test="sort != null">sort,</if>
+            <if test="isVisible != null">is_visible,</if>
+            <if test="img != null">img,</if>
+            <if test="searchKeyword != null">search_keyword,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="categoryName != null">#{categoryName},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="categoryLevel != null">#{categoryLevel},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="isVisible != null">#{isVisible},</if>
+            <if test="img != null">#{img},</if>
+            <if test="searchKeyword != null">#{searchKeyword},</if>
+         </trim>
+    </insert>
+    <insert id="insertLanguageValue">
+        insert into category_language (category_name, img, language_id, category_id)
+        values (#{categoryName},#{img},#{languageId},#{id})
+    </insert>
+
+    <update id="updateCategory" parameterType="Category">
+        update category
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="categoryName != null">category_name = #{categoryName},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="categoryLevel != null">category_level = #{categoryLevel},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="isVisible != null">is_visible = #{isVisible},</if>
+            <if test="img != null">img = #{img},</if>
+            <if test="searchKeyword != null">search_keyword = #{searchKeyword},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="changeLanguageValue">
+        update category_language
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="categoryName != null">category_name = #{categoryName},</if>
+            <if test="img != null">img = #{img},</if>
+        </trim>
+        where language_id = #{languageId} and category_id = #{id}
+    </update>
+
+    <delete id="deleteCategoryById" parameterType="Long">
+        delete from category where id = #{id}
+    </delete>
+
+    <delete id="deleteCategoryByIds" parameterType="String">
+        delete from category where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

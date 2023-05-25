@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.GoodsBrandMapper">
+    
+    <resultMap type="GoodsBrand" id="GoodsBrandResult">
+        <result property="id"    column="id"    />
+        <result property="brandName"    column="brand_name"    />
+        <result property="brandLogo"    column="brand_logo"    />
+    </resultMap>
+
+    <sql id="selectGoodsBrandVo">
+        select id, brand_name, brand_logo from goods_brand
+    </sql>
+
+    <select id="selectGoodsBrandList" parameterType="GoodsBrand" resultMap="GoodsBrandResult">
+        <include refid="selectGoodsBrandVo"/>
+        <where>  
+            <if test="brandName != null  and brandName != ''"> and brand_name like concat('%', #{brandName}, '%')</if>
+            <if test="brandLogo != null  and brandLogo != ''"> and brand_logo = #{brandLogo}</if>
+        </where>
+    </select>
+    
+    <select id="selectGoodsBrandById" parameterType="Long" resultMap="GoodsBrandResult">
+        <include refid="selectGoodsBrandVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertGoodsBrand" parameterType="GoodsBrand" useGeneratedKeys="true" keyProperty="id">
+        insert into goods_brand
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="brandName != null">brand_name,</if>
+            <if test="brandLogo != null">brand_logo,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="brandName != null">#{brandName},</if>
+            <if test="brandLogo != null">#{brandLogo},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGoodsBrand" parameterType="GoodsBrand">
+        update goods_brand
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="brandName != null">brand_name = #{brandName},</if>
+            <if test="brandLogo != null">brand_logo = #{brandLogo},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteGoodsBrandById" parameterType="Long">
+        delete from goods_brand where id = #{id}
+    </delete>
+
+    <delete id="deleteGoodsBrandByIds" parameterType="String">
+        delete from goods_brand where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

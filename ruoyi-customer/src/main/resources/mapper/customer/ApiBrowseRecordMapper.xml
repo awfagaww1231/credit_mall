@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.customer.mapper.ApiBrowseRecordMapper">
+    
+    <resultMap type="ApiBrowseRecord" id="BrowseRecordResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="shopGoodsInfoId"    column="shop_goods_info_id"    />
+        <result property="singlePrice"    column="single_price"    />
+        <result property="goodsImg"    column="goods_img"    />
+        <result property="browseTime"    column="browse_time"    />
+    </resultMap>
+
+    <sql id="selectBrowseRecordVo">
+        select a.id, user_id, shop_goods_info_id,goods_img,single_price, browse_time
+        from browse_record a
+                 left join shop_goods_info b
+                           on a.shop_goods_info_id = b.id
+                 left join platform_goods_info c
+                           on c.id = goods_id
+    </sql>
+
+    <select id="selectBrowseRecordList" parameterType="ApiBrowseRecord" resultMap="BrowseRecordResult">
+        <include refid="selectBrowseRecordVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="shopGoodsInfoId != null "> and shop_goods_info_id = #{shopGoodsInfoId}</if>
+            <if test="startTime !=null ">
+                <![CDATA[   and DATE_FORMAT(browse_time, '%Y-%m-%d')>=  DATE_FORMAT(#{startTime}, '%Y-%m-%d')   ]]></if>
+            <if test="endTime !=null ">
+                <![CDATA[  and DATE_FORMAT(browse_time, '%Y-%m-%d') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d')    ]]></if>
+        </where>
+        order by browse_time desc
+    </select>
+    
+    <select id="selectBrowseRecordById" parameterType="Long" resultMap="BrowseRecordResult">
+        <include refid="selectBrowseRecordVo"/>
+        where a.id = #{id}
+    </select>
+    <select id="selectBrowseRecord" resultMap="BrowseRecordResult">
+        select id, user_id, shop_goods_info_id, browse_time from browse_record
+        where user_id = #{userId} and shop_goods_info_id = #{shopGoodsInfoId}
+    </select>
+
+    <insert id="insertBrowseRecord" parameterType="ApiBrowseRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into browse_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="shopGoodsInfoId != null">shop_goods_info_id,</if>
+            <if test="browseTime != null">browse_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="shopGoodsInfoId != null">#{shopGoodsInfoId},</if>
+            <if test="browseTime != null">#{browseTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBrowseRecord" parameterType="ApiBrowseRecord">
+        update browse_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="shopGoodsInfoId != null">shop_goods_info_id = #{shopGoodsInfoId},</if>
+            <if test="browseTime != null">browse_time = #{browseTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBrowseRecordById" parameterType="Long">
+        delete from browse_record where id = #{id}
+    </delete>
+
+    <delete id="deleteBrowseRecordByIds" parameterType="String">
+        delete from browse_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.RichTextLangMapper">
+    
+    <resultMap type="RichTextLang" id="RichTextLangResult">
+        <result property="id"    column="id"    />
+        <result property="content"    column="content"    />
+        <result property="textType"    column="text_type"    />
+        <result property="contentEn"    column="content_en"    />
+        <result property="contentTc"    column="content_tc"    />
+        <result property="contentDe"    column="content_de"    />
+        <result property="contentEs"    column="content_es"    />
+        <result property="contentFr"    column="content_fr"    />
+        <result property="contentIdn"    column="content_idn"    />
+        <result property="contentJp"    column="content_jp"    />
+        <result property="contentKo"    column="content_ko"    />
+        <result property="contentMy"    column="content_my"    />
+        <result property="contentTh"    column="content_th"    />
+        <result property="contentVi"    column="content_vi"    />
+        <result property="contentPt"    column="content_pt"    />
+        <result property="contentRus"    column="content_rus"    />
+        <result property="contentBlr"    column="content_blr"    />
+        <result property="contentIda"    column="content_ida"    />
+        <result property="contentSa"    column="content_sa"    />
+        <result property="contentAr"    column="content_ar"    />
+        <result property="contentIt"    column="content_it"    />
+    </resultMap>
+
+    <sql id="selectRichTextLangVo">
+        select id, content, text_type, content_en, content_tc, content_de, content_es, content_fr, content_idn, content_jp, content_ko, content_my, content_th, content_vi, content_pt, content_rus, content_blr, content_ida, content_sa, content_ar, content_it from rich_text_lang
+    </sql>
+
+    <select id="selectRichTextLangList" parameterType="RichTextLang" resultMap="RichTextLangResult">
+        <include refid="selectRichTextLangVo"/>
+        <where>  
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="textType != null "> and text_type = #{textType}</if>
+            <if test="contentEn != null  and contentEn != ''"> and content_en = #{contentEn}</if>
+            <if test="contentTc != null  and contentTc != ''"> and content_tc = #{contentTc}</if>
+            <if test="contentDe != null  and contentDe != ''"> and content_de = #{contentDe}</if>
+            <if test="contentEs != null  and contentEs != ''"> and content_es = #{contentEs}</if>
+            <if test="contentFr != null  and contentFr != ''"> and content_fr = #{contentFr}</if>
+            <if test="contentIdn != null  and contentIdn != ''"> and content_idn = #{contentIdn}</if>
+            <if test="contentJp != null  and contentJp != ''"> and content_jp = #{contentJp}</if>
+            <if test="contentKo != null  and contentKo != ''"> and content_ko = #{contentKo}</if>
+            <if test="contentMy != null  and contentMy != ''"> and content_my = #{contentMy}</if>
+            <if test="contentTh != null  and contentTh != ''"> and content_th = #{contentTh}</if>
+            <if test="contentVi != null  and contentVi != ''"> and content_vi = #{contentVi}</if>
+            <if test="contentPt != null  and contentPt != ''"> and content_pt = #{contentPt}</if>
+            <if test="contentRus != null  and contentRus != ''"> and content_rus = #{contentRus}</if>
+            <if test="contentBlr != null  and contentBlr != ''"> and content_blr = #{contentBlr}</if>
+            <if test="contentIda != null  and contentIda != ''"> and content_ida = #{contentIda}</if>
+            <if test="contentSa != null  and contentSa != ''"> and content_sa = #{contentSa}</if>
+            <if test="contentAr != null  and contentAr != ''"> and content_ar = #{contentAr}</if>
+            <if test="contentIt != null  and contentIt != ''"> and content_it = #{contentIt}</if>
+        </where>
+    </select>
+    
+    <select id="selectRichTextLangById" parameterType="Long" resultMap="RichTextLangResult">
+        <include refid="selectRichTextLangVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertRichTextLang" parameterType="RichTextLang">
+        insert into rich_text_lang
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="content != null">content,</if>
+            <if test="textType != null">text_type,</if>
+            <if test="contentEn != null">content_en,</if>
+            <if test="contentTc != null">content_tc,</if>
+            <if test="contentDe != null">content_de,</if>
+            <if test="contentEs != null">content_es,</if>
+            <if test="contentFr != null">content_fr,</if>
+            <if test="contentIdn != null">content_idn,</if>
+            <if test="contentJp != null">content_jp,</if>
+            <if test="contentKo != null">content_ko,</if>
+            <if test="contentMy != null">content_my,</if>
+            <if test="contentTh != null">content_th,</if>
+            <if test="contentVi != null">content_vi,</if>
+            <if test="contentPt != null">content_pt,</if>
+            <if test="contentRus != null">content_rus,</if>
+            <if test="contentBlr != null">content_blr,</if>
+            <if test="contentIda != null">content_ida,</if>
+            <if test="contentSa != null">content_sa,</if>
+            <if test="contentAr != null">content_ar,</if>
+            <if test="contentIt != null">content_it,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="content != null">#{content},</if>
+            <if test="textType != null">#{textType},</if>
+            <if test="contentEn != null">#{contentEn},</if>
+            <if test="contentTc != null">#{contentTc},</if>
+            <if test="contentDe != null">#{contentDe},</if>
+            <if test="contentEs != null">#{contentEs},</if>
+            <if test="contentFr != null">#{contentFr},</if>
+            <if test="contentIdn != null">#{contentIdn},</if>
+            <if test="contentJp != null">#{contentJp},</if>
+            <if test="contentKo != null">#{contentKo},</if>
+            <if test="contentMy != null">#{contentMy},</if>
+            <if test="contentTh != null">#{contentTh},</if>
+            <if test="contentVi != null">#{contentVi},</if>
+            <if test="contentPt != null">#{contentPt},</if>
+            <if test="contentRus != null">#{contentRus},</if>
+            <if test="contentBlr != null">#{contentBlr},</if>
+            <if test="contentIda != null">#{contentIda},</if>
+            <if test="contentSa != null">#{contentSa},</if>
+            <if test="contentAr != null">#{contentAr},</if>
+            <if test="contentIt != null">#{contentIt},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRichTextLang" parameterType="RichTextLang">
+        update rich_text_lang
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="content != null">content = #{content},</if>
+            <if test="textType != null">text_type = #{textType},</if>
+            <if test="contentEn != null">content_en = #{contentEn},</if>
+            <if test="contentTc != null">content_tc = #{contentTc},</if>
+            <if test="contentDe != null">content_de = #{contentDe},</if>
+            <if test="contentEs != null">content_es = #{contentEs},</if>
+            <if test="contentFr != null">content_fr = #{contentFr},</if>
+            <if test="contentIdn != null">content_idn = #{contentIdn},</if>
+            <if test="contentJp != null">content_jp = #{contentJp},</if>
+            <if test="contentKo != null">content_ko = #{contentKo},</if>
+            <if test="contentMy != null">content_my = #{contentMy},</if>
+            <if test="contentTh != null">content_th = #{contentTh},</if>
+            <if test="contentVi != null">content_vi = #{contentVi},</if>
+            <if test="contentPt != null">content_pt = #{contentPt},</if>
+            <if test="contentRus != null">content_rus = #{contentRus},</if>
+            <if test="contentBlr != null">content_blr = #{contentBlr},</if>
+            <if test="contentIda != null">content_ida = #{contentIda},</if>
+            <if test="contentSa != null">content_sa = #{contentSa},</if>
+            <if test="contentAr != null">content_ar = #{contentAr},</if>
+            <if test="contentIt != null">content_it = #{contentIt},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRichTextLangById" parameterType="Long">
+        delete from rich_text_lang where id = #{id}
+    </delete>
+
+    <delete id="deleteRichTextLangByIds" parameterType="String">
+        delete from rich_text_lang where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.customer.mapper.ApiTopRankingMapper">
+
+    <resultMap id="topRankingsListMap" type="apiGoodsInfo">
+        <result property="id"  column="id"></result>
+        <result property="goodsName"  column="goods_name"></result>
+        <result property="goodsImg"  column="goods_img"></result>
+    </resultMap>
+    <select id="topRankingsList" resultMap="topRankingsListMap">
+        select a.id,goods_name,goods_img
+        from shop_goods_info a
+                 left join platform_goods_info b
+                           on a.goods_id = b.id
+        where a.id in
+              (select shop_goods_info_id from ((select shop_goods_info_id
+                                                from shop_order
+                                                where (status = 4 or status = 7)
+                                                group by shop_goods_info_id
+                                                order by rand() limit 3)) as a)
+    </select>
+</mapper>

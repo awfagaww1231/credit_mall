@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CreditCardApplyRecordMapper">
+    
+    <resultMap type="CreditCardApplyRecord" id="CreditCardApplyRecordResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="realName"    column="real_name"    />
+        <result property="creditCardNumber"    column="credit_card_number"    />
+        <result property="creditCardTotalAmount"    column="credit_card_total_amount"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="userApplyAmount"    column="user_apply_amount"    />
+    </resultMap>
+
+    <sql id="selectCreditCardApplyRecordVo">
+        select a.id, a.user_id, a.real_name, a.credit_card_number, a.credit_card_total_amount, a.status, a.remark ,a.user_apply_amount
+        from credit_card_apply_record a
+         inner join user_info ui on a.user_id = ui.id
+         left join  sys_user su on ui.sup_id = su.user_id
+    </sql>
+
+    <select id="selectCreditCardApplyRecordList" parameterType="CreditCardApplyRecord" resultMap="CreditCardApplyRecordResult">
+        <include refid="selectCreditCardApplyRecordVo"/>
+        <where>  
+            <if test="userId != null "> and a.user_id = #{userId}</if>
+            <if test="realName != null  and realName != ''"> and a.real_name like concat('%', #{realName}, '%')</if>
+            <if test="creditCardNumber != null  and creditCardNumber != ''"> and a.credit_card_number = #{creditCardNumber}</if>
+            <if test="creditCardTotalAmount != null "> and a.credit_card_total_amount = #{creditCardTotalAmount}</if>
+            <if test="status != null "> and a.status = #{status}</if>
+            ${params.dataScope}
+        </where>
+        order by field(a.`status`,0) desc,id desc
+    </select>
+    
+    <select id="selectCreditCardApplyRecordById" parameterType="Long" resultMap="CreditCardApplyRecordResult">
+        <include refid="selectCreditCardApplyRecordVo"/>
+        where a.id = #{id}
+    </select>
+    <select id="getApplyCreditCardRejectMsg" resultType="java.lang.String">
+        select remark from credit_card_apply_record where user_id = #{userId} and status = 2 order by id desc limit 1
+    </select>
+
+    <insert id="insertCreditCardApplyRecord" parameterType="CreditCardApplyRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into credit_card_apply_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="realName != null">real_name,</if>
+            <if test="creditCardNumber != null">credit_card_number,</if>
+            <if test="creditCardTotalAmount != null">credit_card_total_amount,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="userApplyAmount != null">user_apply_amount,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="realName != null">#{realName},</if>
+            <if test="creditCardNumber != null">#{creditCardNumber},</if>
+            <if test="creditCardTotalAmount != null">#{creditCardTotalAmount},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="userApplyAmount != null">#{userApplyAmount},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCreditCardApplyRecord" parameterType="CreditCardApplyRecord">
+        update credit_card_apply_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="realName != null">real_name = #{realName},</if>
+            <if test="creditCardNumber != null">credit_card_number = #{creditCardNumber},</if>
+            <if test="creditCardTotalAmount != null">credit_card_total_amount = #{creditCardTotalAmount},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="userApplyAmount != null">user_apply_amount = #{userApplyAmount},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCreditCardApplyRecordById" parameterType="Long">
+        delete from credit_card_apply_record where id = #{id}
+    </delete>
+
+    <delete id="deleteCreditCardApplyRecordByIds" parameterType="String">
+        delete from credit_card_apply_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

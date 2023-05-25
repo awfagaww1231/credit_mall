@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.UserEvaluationMapper">
+    
+    <resultMap type="UserEvaluation" id="UserEvaluationResult">
+        <result property="id"    column="id"    />
+        <result property="shopOrderId"    column="shop_order_id"    />
+        <result property="content"    column="content"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="shopGoodsInfoId"    column="shop_goods_info_id"    />
+        <result property="score"    column="score"    />
+    </resultMap>
+
+    <sql id="selectUserEvaluationVo">
+        select id, shop_order_id, content, create_time, shop_goods_info_id, score from user_evaluation
+    </sql>
+
+    <select id="selectUserEvaluationList" parameterType="UserEvaluation" resultMap="UserEvaluationResult">
+        <include refid="selectUserEvaluationVo"/>
+        <where>  
+            <if test="shopOrderId != null "> and shop_order_id = #{shopOrderId}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="shopGoodsInfoId != null "> and shop_goods_info_id = #{shopGoodsInfoId}</if>
+            <if test="score != null "> and score = #{score}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserEvaluationById" parameterType="Long" resultMap="UserEvaluationResult">
+        <include refid="selectUserEvaluationVo"/>
+        where id = #{id}
+    </select>
+
+    <resultMap id="selectNotYetEvaluationShopOrderMap" type="com.ruoyi.system.domain.ShopOrder">
+        <result property="shopGoodsInfoId" column="shop_goods_info_id"></result>
+        <result property="userId" column="user_id"></result>
+        <result property="id" column="id"></result>
+    </resultMap>
+    <select id="selectNotYetEvaluationShopOrder" resultMap="selectNotYetEvaluationShopOrderMap">
+        select id,user_id,shop_goods_info_id from shop_order
+        where status = 7
+        and date_add(finish_time,interval 7 day) &lt; now()
+    </select>
+
+    <insert id="insertUserEvaluation" parameterType="UserEvaluation" useGeneratedKeys="true" keyProperty="id">
+        insert into user_evaluation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="shopOrderId != null">shop_order_id,</if>
+            <if test="content != null">content,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="shopGoodsInfoId != null">shop_goods_info_id,</if>
+            <if test="score != null">score,</if>
+            <if test="userId != null">user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="shopOrderId != null">#{shopOrderId},</if>
+            <if test="content != null">#{content},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="shopGoodsInfoId != null">#{shopGoodsInfoId},</if>
+            <if test="score != null">#{score},</if>
+            <if test="userId != null">#{userId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserEvaluation" parameterType="UserEvaluation">
+        update user_evaluation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="shopOrderId != null">shop_order_id = #{shopOrderId},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="shopGoodsInfoId != null">shop_goods_info_id = #{shopGoodsInfoId},</if>
+            <if test="score != null">score = #{score},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserEvaluationById" parameterType="Long">
+        delete from user_evaluation where id = #{id}
+    </delete>
+
+    <delete id="deleteUserEvaluationByIds" parameterType="String">
+        delete from user_evaluation where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

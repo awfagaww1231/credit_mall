@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ApplySellerAccountMapper">
+    
+    <resultMap type="ApplySellerAccount" id="ApplySellerAccountResult">
+        <result property="id"    column="id"    />
+        <result property="sellerAccount"    column="seller_account"    />
+        <result property="password"    column="password"    />
+        <result property="status"    column="status"    />
+        <result property="applyImg"    column="apply_img"    />
+    </resultMap>
+
+    <sql id="selectApplySellerAccountVo">
+        select id, seller_account, password, status, apply_img from apply_seller_account
+    </sql>
+
+    <select id="selectApplySellerAccountList" parameterType="ApplySellerAccount" resultMap="ApplySellerAccountResult">
+        <include refid="selectApplySellerAccountVo"/>
+        <where>  
+            <if test="sellerAccount != null  and sellerAccount != ''"> and seller_account = #{sellerAccount}</if>
+            <if test="password != null  and password != ''"> and password = #{password}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="applyImg != null  and applyImg != ''"> and apply_img = #{applyImg}</if>
+        </where>
+    </select>
+    
+    <select id="selectApplySellerAccountById" parameterType="Long" resultMap="ApplySellerAccountResult">
+        <include refid="selectApplySellerAccountVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertApplySellerAccount" parameterType="ApplySellerAccount">
+        insert into apply_seller_account
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="sellerAccount != null and sellerAccount != ''">seller_account,</if>
+            <if test="password != null and password != ''">password,</if>
+            <if test="status != null">status,</if>
+            <if test="applyImg != null and applyImg != ''">apply_img,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="sellerAccount != null and sellerAccount != ''">#{sellerAccount},</if>
+            <if test="password != null and password != ''">#{password},</if>
+            <if test="status != null">#{status},</if>
+            <if test="applyImg != null and applyImg != ''">#{applyImg},</if>
+         </trim>
+    </insert>
+
+    <update id="updateApplySellerAccount" parameterType="ApplySellerAccount">
+        update apply_seller_account
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sellerAccount != null and sellerAccount != ''">seller_account = #{sellerAccount},</if>
+            <if test="password != null and password != ''">password = #{password},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="applyImg != null and applyImg != ''">apply_img = #{applyImg},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteApplySellerAccountById" parameterType="Long">
+        delete from apply_seller_account where id = #{id}
+    </delete>
+
+    <delete id="deleteApplySellerAccountByIds" parameterType="String">
+        delete from apply_seller_account where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

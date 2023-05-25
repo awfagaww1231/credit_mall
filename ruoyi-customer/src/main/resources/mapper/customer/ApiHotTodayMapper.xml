@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.customer.mapper.ApiHotTodayMapper">
+
+    <resultMap id="goodsInfoListByCategoryMap" type="com.ruoyi.customer.domain.ApiGoodsInfo">
+        <result column="id" property="id"></result>
+        <result column="shop_id" property="shopId"></result>
+        <result column="shop_name" property="shopName"></result>
+        <result column="shop_logo" property="shopLogo"></result>
+        <result column="goods_id" property="goodsId"></result>
+        <result column="goods_name" property="goodsName"></result>
+        <result column="goods_img" property="goodsImg"></result>
+        <result column="img_list" property="imgList"></result>
+        <result column="minor_class" property="minorClass"></result>
+        <result column="single_price" property="singlePrice"></result>
+        <result column="platform_goods_status" property="platformGoodsStatus"></result>
+        <result column="discount_price" property="discountPrice"></result>
+        <result column="introduce" property="introduce"></result>
+        <result column="detail" property="detail"></result>
+    </resultMap>
+    <select id="hotTodayList" resultMap="goodsInfoListByCategoryMap">
+        select b.id,shop_id,shop_name,shop_logo,goods_id,goods_name,goods_img,img_list,b.status platform_goods_status,minor_class,introduce, detail,single_price,b.discount_price
+        from hot_today a
+                 left join shop_goods_info b
+                           on shop_goods_info_id = b.id
+                 left join (SELECT
+                                a.id,
+                                IFNULL( b.goods_name, a.goods_name ) goods_name,
+                                IFNULL( b.goods_img, a.goods_img ) goods_img,
+                                IFNULL( b.img_list, a.img_list ) img_list,
+                                price,
+                                discount_price,
+                                minor_class,
+                                goods_inventory,
+                                create_time,
+                                update_time,
+                                IFNULL( b.detail, a.detail ) detail,
+                                IFNULL( b.introduce, a.introduce ) introduce,
+                                STATUS,
+                                is_del
+                            FROM
+                                platform_goods_info a
+                                    LEFT JOIN platform_goods_info_language b ON a.id = b.goods_id
+                                    AND b.language_id = #{languageId}) c
+                           on c.id = goods_id
+                 left join shop_info d
+                           on d.id = shop_id
+        where b.status = 0 and is_del = 0
+        order by sort
+    </select>
+
+</mapper>

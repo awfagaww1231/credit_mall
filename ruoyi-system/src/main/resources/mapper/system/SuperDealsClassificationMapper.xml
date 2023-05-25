@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SuperDealsClassificationMapper">
+
+    <resultMap type="SuperDealsClassification" id="SuperDealsClassificationResult">
+        <result property="id"    column="id"    />
+        <result property="classificationName"    column="classification_name"    />
+        <result property="classificationNameEn"    column="classification_name_en"    />
+        <result property="classificationNameTc"    column="classification_name_tc"    />
+        <result property="classificationNameDe"    column="classification_name_de"    />
+        <result property="classificationNameEs"    column="classification_name_es"    />
+        <result property="classificationNameFr"    column="classification_name_fr"    />
+        <result property="classificationNameIdn"    column="classification_name_idn"    />
+        <result property="classificationNameJp"    column="classification_name_jp"    />
+        <result property="classificationNameKo"    column="classification_name_ko"    />
+        <result property="classificationNameMy"    column="classification_name_my"    />
+        <result property="classificationNameTh"    column="classification_name_th"    />
+        <result property="classificationNameVi"    column="classification_name_vi"    />
+        <result property="classificationNamePt"    column="classification_name_pt"    />
+        <result property="classificationNameRus"    column="classification_name_rus"    />
+        <result property="classificationNameBlr"    column="classification_name_blr"    />
+        <result property="classificationNameIda"    column="classification_name_ida"    />
+        <result property="classificationNameSa"    column="classification_name_sa"    />
+        <result property="classificationNameAr"    column="classification_name_ar"    />
+        <result property="classificationNameIt"    column="classification_name_it"    />
+    </resultMap>
+
+    <sql id="selectSuperDealsClassificationVo">
+        select id, classification_name, classification_name_en, classification_name_tc, classification_name_de, classification_name_es, classification_name_fr, classification_name_idn, classification_name_jp, classification_name_ko, classification_name_my, classification_name_th, classification_name_vi, classification_name_pt, classification_name_rus, classification_name_blr, classification_name_ida, classification_name_sa, classification_name_ar, classification_name_it from super_deals_classification
+    </sql>
+
+    <select id="selectSuperDealsClassificationList" parameterType="SuperDealsClassification" resultMap="SuperDealsClassificationResult">
+        <include refid="selectSuperDealsClassificationVo"/>
+        <where>
+            <if test="classificationName != null  and classificationName != ''"> and classification_name like concat('%', #{classificationName}, '%')</if>
+            <if test="classificationNameEn != null  and classificationNameEn != ''"> and classification_name_en = #{classificationNameEn}</if>
+            <if test="classificationNameTc != null  and classificationNameTc != ''"> and classification_name_tc = #{classificationNameTc}</if>
+            <if test="classificationNameDe != null  and classificationNameDe != ''"> and classification_name_de = #{classificationNameDe}</if>
+            <if test="classificationNameEs != null  and classificationNameEs != ''"> and classification_name_es = #{classificationNameEs}</if>
+            <if test="classificationNameFr != null  and classificationNameFr != ''"> and classification_name_fr = #{classificationNameFr}</if>
+            <if test="classificationNameIdn != null  and classificationNameIdn != ''"> and classification_name_idn = #{classificationNameIdn}</if>
+            <if test="classificationNameJp != null  and classificationNameJp != ''"> and classification_name_jp = #{classificationNameJp}</if>
+            <if test="classificationNameKo != null  and classificationNameKo != ''"> and classification_name_ko = #{classificationNameKo}</if>
+            <if test="classificationNameMy != null  and classificationNameMy != ''"> and classification_name_my = #{classificationNameMy}</if>
+            <if test="classificationNameTh != null  and classificationNameTh != ''"> and classification_name_th = #{classificationNameTh}</if>
+            <if test="classificationNameVi != null  and classificationNameVi != ''"> and classification_name_vi = #{classificationNameVi}</if>
+            <if test="classificationNamePt != null  and classificationNamePt != ''"> and classification_name_pt = #{classificationNamePt}</if>
+            <if test="classificationNameRus != null  and classificationNameRus != ''"> and classification_name_rus = #{classificationNameRus}</if>
+            <if test="classificationNameBlr != null  and classificationNameBlr != ''"> and classification_name_blr = #{classificationNameBlr}</if>
+            <if test="classificationNameIda != null  and classificationNameIda != ''"> and classification_name_ida = #{classificationNameIda}</if>
+            <if test="classificationNameSa != null  and classificationNameSa != ''"> and classification_name_sa = #{classificationNameSa}</if>
+            <if test="classificationNameAr != null  and classificationNameAr != ''"> and classification_name_ar = #{classificationNameAr}</if>
+            <if test="classificationNameIt != null  and classificationNameIt != ''"> and classification_name_it = #{classificationNameIt}</if>
+        </where>
+    </select>
+
+    <select id="selectSuperDealsClassificationById" parameterType="Long" resultMap="SuperDealsClassificationResult">
+        <include refid="selectSuperDealsClassificationVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSuperDealsClassification" parameterType="SuperDealsClassification" useGeneratedKeys="true" keyProperty="id">
+        insert into super_deals_classification
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="classificationName != null">classification_name,</if>
+            <if test="classificationNameEn != null">classification_name_en,</if>
+            <if test="classificationNameTc != null">classification_name_tc,</if>
+            <if test="classificationNameDe != null">classification_name_de,</if>
+            <if test="classificationNameEs != null">classification_name_es,</if>
+            <if test="classificationNameFr != null">classification_name_fr,</if>
+            <if test="classificationNameIdn != null">classification_name_idn,</if>
+            <if test="classificationNameJp != null">classification_name_jp,</if>
+            <if test="classificationNameKo != null">classification_name_ko,</if>
+            <if test="classificationNameMy != null">classification_name_my,</if>
+            <if test="classificationNameTh != null">classification_name_th,</if>
+            <if test="classificationNameVi != null">classification_name_vi,</if>
+            <if test="classificationNamePt != null">classification_name_pt,</if>
+            <if test="classificationNameRus != null">classification_name_rus,</if>
+            <if test="classificationNameBlr != null">classification_name_blr,</if>
+            <if test="classificationNameIda != null">classification_name_ida,</if>
+            <if test="classificationNameSa != null">classification_name_sa,</if>
+            <if test="classificationNameAr != null">classification_name_ar,</if>
+            <if test="classificationNameIt != null">classification_name_it,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="classificationName != null">#{classificationName},</if>
+            <if test="classificationNameEn != null">#{classificationNameEn},</if>
+            <if test="classificationNameTc != null">#{classificationNameTc},</if>
+            <if test="classificationNameDe != null">#{classificationNameDe},</if>
+            <if test="classificationNameEs != null">#{classificationNameEs},</if>
+            <if test="classificationNameFr != null">#{classificationNameFr},</if>
+            <if test="classificationNameIdn != null">#{classificationNameIdn},</if>
+            <if test="classificationNameJp != null">#{classificationNameJp},</if>
+            <if test="classificationNameKo != null">#{classificationNameKo},</if>
+            <if test="classificationNameMy != null">#{classificationNameMy},</if>
+            <if test="classificationNameTh != null">#{classificationNameTh},</if>
+            <if test="classificationNameVi != null">#{classificationNameVi},</if>
+            <if test="classificationNamePt != null">#{classificationNamePt},</if>
+            <if test="classificationNameRus != null">#{classificationNameRus},</if>
+            <if test="classificationNameBlr != null">#{classificationNameBlr},</if>
+            <if test="classificationNameIda != null">#{classificationNameIda},</if>
+            <if test="classificationNameSa != null">#{classificationNameSa},</if>
+            <if test="classificationNameAr != null">#{classificationNameAr},</if>
+            <if test="classificationNameIt != null">#{classificationNameIt},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSuperDealsClassification" parameterType="SuperDealsClassification">
+        update super_deals_classification
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="classificationName != null">classification_name = #{classificationName},</if>
+            <if test="classificationNameEn != null">classification_name_en = #{classificationNameEn},</if>
+            <if test="classificationNameTc != null">classification_name_tc = #{classificationNameTc},</if>
+            <if test="classificationNameDe != null">classification_name_de = #{classificationNameDe},</if>
+            <if test="classificationNameEs != null">classification_name_es = #{classificationNameEs},</if>
+            <if test="classificationNameFr != null">classification_name_fr = #{classificationNameFr},</if>
+            <if test="classificationNameIdn != null">classification_name_idn = #{classificationNameIdn},</if>
+            <if test="classificationNameJp != null">classification_name_jp = #{classificationNameJp},</if>
+            <if test="classificationNameKo != null">classification_name_ko = #{classificationNameKo},</if>
+            <if test="classificationNameMy != null">classification_name_my = #{classificationNameMy},</if>
+            <if test="classificationNameTh != null">classification_name_th = #{classificationNameTh},</if>
+            <if test="classificationNameVi != null">classification_name_vi = #{classificationNameVi},</if>
+            <if test="classificationNamePt != null">classification_name_pt = #{classificationNamePt},</if>
+            <if test="classificationNameRus != null">classification_name_rus = #{classificationNameRus},</if>
+            <if test="classificationNameBlr != null">classification_name_blr = #{classificationNameBlr},</if>
+            <if test="classificationNameIda != null">classification_name_ida = #{classificationNameIda},</if>
+            <if test="classificationNameSa != null">classification_name_sa = #{classificationNameSa},</if>
+            <if test="classificationNameAr != null">classification_name_ar = #{classificationNameAr},</if>
+            <if test="classificationNameIt != null">classification_name_it = #{classificationNameIt},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSuperDealsClassificationById" parameterType="Long">
+        delete from super_deals_classification where id = #{id}
+    </delete>
+
+    <delete id="deleteSuperDealsClassificationByIds" parameterType="String">
+        delete from super_deals_classification where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

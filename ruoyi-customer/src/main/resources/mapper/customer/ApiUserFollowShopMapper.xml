@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.customer.mapper.ApiUserFollowShopMapper">
+    
+    <resultMap type="ApiUserFollowShop" id="UserFollowShopResult">
+        <result property="id"    column="id"    />
+        <result property="shopId"    column="shop_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="status"    column="status"    />
+        <result property="shopName"    column="shop_name"    />
+        <result property="shopLogo"    column="shop_logo"    />
+        <result property="shopTel"    column="shop_tel"    />
+    </resultMap>
+
+    <sql id="selectUserFollowShopVo">
+        select a.id, shop_id, user_id, a.status,shop_name,shop_logo,shop_tel
+        from user_follow_shop a
+                 left join shop_info b
+                           on a.shop_id = b.id
+    </sql>
+
+    <select id="selectUserFollowShopList" parameterType="ApiUserFollowShop" resultMap="UserFollowShopResult">
+        <include refid="selectUserFollowShopVo"/>
+        <where>  
+            <if test="shopId != null "> and shop_id = #{shopId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="status != null "> and a.status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserFollowShopById" parameterType="Long" resultMap="UserFollowShopResult">
+        <include refid="selectUserFollowShopVo"/>
+        where a.id = #{id}
+    </select>
+
+    <select id="selectUserFollowShop" parameterType="Long" resultMap="UserFollowShopResult">
+        <include refid="selectUserFollowShopVo"/>
+        where shop_id = #{shopId} and user_id = #{userId}
+    </select>
+
+    <insert id="insertUserFollowShop" parameterType="ApiUserFollowShop" useGeneratedKeys="true" keyProperty="id">
+        insert into user_follow_shop
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="shopId != null">shop_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="shopId != null">#{shopId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserFollowShop" parameterType="ApiUserFollowShop">
+        update user_follow_shop
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="shopId != null">shop_id = #{shopId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+
+</mapper>

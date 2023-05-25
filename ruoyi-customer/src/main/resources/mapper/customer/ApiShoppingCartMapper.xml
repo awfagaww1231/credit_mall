@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.customer.mapper.ApiShoppingCartMapper">
+    
+    <resultMap type="ApiShoppingCart" id="ShoppingCartResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="shopGoodsInfoId"    column="shop_goods_info_id"    />
+        <result property="shopId"    column="shop_id"    />
+        <result property="shopName"    column="shop_name"    />
+        <result property="shopLogo"    column="shop_logo"    />
+        <result column="goods_id" property="goodsId"></result>
+        <result column="goods_name" property="goodsName"></result>
+        <result column="goods_img" property="goodsImg"></result>
+        <result column="minor_class" property="minorClass"></result>
+        <result column="single_price" property="singlePrice"></result>
+        <result column="discount_price" property="discountPrice"></result>
+        <result column="introduce" property="introduce"></result>
+        <result column="detail" property="detail"></result>
+        <result property="cartQuantity"    column="cart_quantity"    />
+        <result property="shopGoodsInfoId"    column="shop_goods_info_id"    />
+    </resultMap>
+
+    <sql id="selectShoppingCartVo">
+        select a.id,cart_quantity,shop_id,shop_name,shop_logo,goods_id,goods_name,goods_img,
+               minor_class,introduce, detail,single_price,b.discount_price,shop_goods_info_id
+        from shopping_cart a
+                 left join shop_goods_info b
+                           on a.shop_goods_info_id = b.id
+                 left join platform_goods_info c
+                           on goods_id = c.id
+                 left join shop_info d
+                           on d.id = shop_id
+    </sql>
+
+    <select id="selectShoppingCartList" parameterType="ApiShoppingCart" resultMap="ShoppingCartResult">
+        <include refid="selectShoppingCartVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="shopGoodsInfoId != null "> and shop_goods_info_id = #{shopGoodsInfoId}</if>
+            <if test="cartQuantity != null "> and cart_quantity = #{cartQuantity}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            and c.status =0 and is_del = 0
+        </where>
+        order by a.id desc
+    </select>
+    
+    <select id="selectShoppingCartById" parameterType="Long" resultMap="ShoppingCartResult">
+        <include refid="selectShoppingCartVo"/>
+        where a.id = #{id}
+    </select>
+
+    <select id="selectShoppingCart" resultMap="ShoppingCartResult">
+        <include refid="selectShoppingCartVo"/>
+        where shop_goods_info_id = #{shopGoodsInfoId} and user_id = #{userId}
+    </select>
+        
+    <insert id="insertShoppingCart" parameterType="ApiShoppingCart" useGeneratedKeys="true" keyProperty="id">
+        insert into shopping_cart
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="shopGoodsInfoId != null">shop_goods_info_id,</if>
+            <if test="cartQuantity != null">cart_quantity,</if>
+            <if test="specification != null">specification,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="shopGoodsInfoId != null">#{shopGoodsInfoId},</if>
+            <if test="cartQuantity != null">#{cartQuantity},</if>
+            <if test="specification != null">#{specification},</if>
+         </trim>
+    </insert>
+
+    <update id="updateShoppingCart" parameterType="ApiShoppingCart">
+        update shopping_cart
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="shopGoodsInfoId != null">shop_goods_info_id = #{shopGoodsInfoId},</if>
+            <if test="cartQuantity != null">cart_quantity = #{cartQuantity},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteShoppingCartById" parameterType="Long">
+        delete from shopping_cart where id = #{id}
+    </delete>
+
+    <delete id="deleteShoppingCartByIds" parameterType="String">
+        delete from shopping_cart where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

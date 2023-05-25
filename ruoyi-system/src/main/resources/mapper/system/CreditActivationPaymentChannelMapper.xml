@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CreditActivationPaymentChannelMapper">
+    
+    <resultMap type="CreditActivationPaymentChannel" id="CreditActivationPaymentChannelResult">
+        <result property="id"    column="id"    />
+        <result property="channelName"    column="channel_name"    />
+        <result property="channelAccount"    column="channel_account"    />
+        <result property="channelLogo"    column="channel_logo"    />
+        <result property="payType"    column="pay_type"    />
+        <result property="walletReceiptCode"    column="wallet_receipt_code"    />
+        <result property="payIntroduce"    column="pay_introduce"    />
+        <result property="status"    column="status"    />
+        <result property="payeeName"    column="payee_name"    />
+        <result property="accountOpenBank"    column="account_open_bank"    />
+        <result property="teachingVideo"    column="teaching_video"    />
+        <result property="swiftCode"    column="swift_code"    />
+        <result property="routingNumber"    column="routing_number"    />
+    </resultMap>
+
+    <sql id="selectCreditActivationPaymentChannelVo">
+        select id, channel_name, channel_account,payee_name,account_open_bank, channel_logo, pay_type, wallet_receipt_code, pay_introduce, status ,teaching_video,swift_code,routing_number from credit_activation_payment_channel
+    </sql>
+
+    <select id="selectCreditActivationPaymentChannelList" parameterType="CreditActivationPaymentChannel" resultMap="CreditActivationPaymentChannelResult">
+        <include refid="selectCreditActivationPaymentChannelVo"/>
+        <where>  
+            <if test="channelName != null  and channelName != ''"> and channel_name like concat('%', #{channelName}, '%')</if>
+            <if test="channelAccount != null  and channelAccount != ''"> and channel_account = #{channelAccount}</if>
+            <if test="channelLogo != null  and channelLogo != ''"> and channel_logo = #{channelLogo}</if>
+            <if test="payType != null "> and pay_type = #{payType}</if>
+            <if test="walletReceiptCode != null  and walletReceiptCode != ''"> and wallet_receipt_code = #{walletReceiptCode}</if>
+            <if test="payIntroduce != null  and payIntroduce != ''"> and pay_introduce = #{payIntroduce}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectCreditActivationPaymentChannelById" parameterType="Long" resultMap="CreditActivationPaymentChannelResult">
+        <include refid="selectCreditActivationPaymentChannelVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCreditActivationPaymentChannel" parameterType="CreditActivationPaymentChannel" useGeneratedKeys="true" keyProperty="id">
+        insert into credit_activation_payment_channel
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="channelName != null">channel_name,</if>
+            <if test="channelAccount != null">channel_account,</if>
+            <if test="channelLogo != null">channel_logo,</if>
+            <if test="payType != null">pay_type,</if>
+            <if test="walletReceiptCode != null">wallet_receipt_code,</if>
+            <if test="payIntroduce != null">pay_introduce,</if>
+            <if test="status != null">status,</if>
+            <if test="payeeName != null">payee_name,</if>
+            <if test="accountOpenBank != null">account_open_bank,</if>
+            <if test="teachingVideo != null">teaching_video,</if>
+            <if test="swiftCode != null">swift_code,</if>
+            <if test="routingNumber != null">routing_number,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="channelName != null">#{channelName},</if>
+            <if test="channelAccount != null">#{channelAccount},</if>
+            <if test="channelLogo != null">#{channelLogo},</if>
+            <if test="payType != null">#{payType},</if>
+            <if test="walletReceiptCode != null">#{walletReceiptCode},</if>
+            <if test="payIntroduce != null">#{payIntroduce},</if>
+            <if test="status != null">#{status},</if>
+            <if test="payeeName != null">#{payeeName},</if>
+            <if test="accountOpenBank != null">#{accountOpenBank},</if>
+            <if test="teachingVideo != null">#{teachingVideo},</if>
+            <if test="swiftCode != null">#{swiftCode},</if>
+            <if test="routingNumber != null">#{routingNumber},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCreditActivationPaymentChannel" parameterType="CreditActivationPaymentChannel">
+        update credit_activation_payment_channel
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="channelName != null">channel_name = #{channelName},</if>
+            <if test="channelAccount != null">channel_account = #{channelAccount},</if>
+            <if test="channelLogo != null">channel_logo = #{channelLogo},</if>
+            <if test="payType != null">pay_type = #{payType},</if>
+            <if test="walletReceiptCode != null">wallet_receipt_code = #{walletReceiptCode},</if>
+            <if test="payIntroduce != null">pay_introduce = #{payIntroduce},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="payeeName != null">payee_name = #{payeeName},</if>
+            <if test="accountOpenBank != null">account_open_bank = #{accountOpenBank},</if>
+            <if test="teachingVideo != null">teaching_video = #{teachingVideo},</if>
+            <if test="swiftCode != null">swift_code = #{swiftCode},</if>
+            <if test="routingNumber != null">routing_number = #{routingNumber},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCreditActivationPaymentChannelById" parameterType="Long">
+        delete from credit_activation_payment_channel where id = #{id}
+    </delete>
+
+    <delete id="deleteCreditActivationPaymentChannelByIds" parameterType="String">
+        delete from credit_activation_payment_channel where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.customer.mapper.ApiUserBankMapper">
+    
+    <resultMap type="ApiUserBank" id="UserBankResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="bankName"    column="bank_name"    />
+        <result property="bankNo"    column="bank_no"    />
+        <result property="bankAddress"    column="bank_address"    />
+        <result property="bankImg"    column="bank_img"    />
+        <result property="bankPhone"    column="bank_phone"    />
+        <result property="addTime"    column="add_time"    />
+        <result property="accountHolder"    column="account_holder"    />
+        <result property="swiftCode"    column="swift_code"    />
+        <result property="routingNumber"    column="routing_number"    />
+    </resultMap>
+
+    <sql id="selectUserBankVo">
+        select id, user_id, bank_name, bank_no, bank_address, bank_img, bank_phone, add_time,account_holder,swift_code,routing_number from user_bank
+    </sql>
+
+    <select id="selectUserBankList" parameterType="ApiUserBank" resultMap="UserBankResult">
+        <include refid="selectUserBankVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="bankName != null  and bankName != ''"> and bank_name like concat('%', #{bankName}, '%')</if>
+            <if test="bankNo != null  and bankNo != ''"> and bank_no = #{bankNo}</if>
+            <if test="bankAddress != null  and bankAddress != ''"> and bank_address = #{bankAddress}</if>
+            <if test="bankImg != null  and bankImg != ''"> and bank_img = #{bankImg}</if>
+            <if test="bankPhone != null  and bankPhone != ''"> and bank_phone = #{bankPhone}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserBankById" parameterType="Long" resultMap="UserBankResult">
+        <include refid="selectUserBankVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertUserBank" parameterType="ApiUserBank" useGeneratedKeys="true" keyProperty="id">
+        insert into user_bank
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="bankName != null">bank_name,</if>
+            <if test="bankNo != null">bank_no,</if>
+            <if test="bankAddress != null">bank_address,</if>
+            <if test="bankImg != null">bank_img,</if>
+            <if test="bankPhone != null">bank_phone,</if>
+            <if test="addTime != null">add_time,</if>
+            <if test="accountHolder != null">account_holder,</if>
+            <if test="swiftCode != null">swift_code,</if>
+            <if test="routingNumber != null">routing_number,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="bankName != null">#{bankName},</if>
+            <if test="bankNo != null">#{bankNo},</if>
+            <if test="bankAddress != null">#{bankAddress},</if>
+            <if test="bankImg != null">#{bankImg},</if>
+            <if test="bankPhone != null">#{bankPhone},</if>
+            <if test="addTime != null">#{addTime},</if>
+            <if test="accountHolder != null">#{accountHolder},</if>
+            <if test="swiftCode != null">#{swiftCode},</if>
+            <if test="routingNumber != null">#{routingNumber},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserBank" parameterType="ApiUserBank">
+        update user_bank
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="bankName != null">bank_name = #{bankName},</if>
+            <if test="bankNo != null">bank_no = #{bankNo},</if>
+            <if test="bankAddress != null">bank_address = #{bankAddress},</if>
+            <if test="bankImg != null">bank_img = #{bankImg},</if>
+            <if test="bankPhone != null">bank_phone = #{bankPhone},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+            <if test="accountHolder != null">account_holder = #{accountHolder},</if>
+            <if test="swiftCode != null">swift_code = #{swiftCode},</if>
+            <if test="routingNumber != null">routing_number = #{routingNumber},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserBankById" parameterType="Long">
+        delete from user_bank where id = #{id}
+    </delete>
+
+    <delete id="deleteUserBankByIds" parameterType="String">
+        delete from user_bank where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

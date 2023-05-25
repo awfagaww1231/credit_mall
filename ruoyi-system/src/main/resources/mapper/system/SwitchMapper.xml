@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SwitchMapper">
+    <update id="updateRegisterValidateCode">
+        update switch_set set status = #{status} where id = 1
+    </update>
+
+
+    <select id="registerValidateCode" resultType="java.lang.Integer">
+        select status from switch_set where id = 1
+    </select>
+</mapper>

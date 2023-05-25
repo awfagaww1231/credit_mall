@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TopRankingsImgsMapper">
+    
+    <resultMap type="TopRankingsImgs" id="TopRankingsImgsResult">
+        <result property="id"    column="id"    />
+        <result property="img"    column="img"    />
+    </resultMap>
+
+    <sql id="selectTopRankingsImgsVo">
+        select id, img from top_rankings_imgs
+    </sql>
+
+    <select id="selectTopRankingsImgsList" parameterType="TopRankingsImgs" resultMap="TopRankingsImgsResult">
+        <include refid="selectTopRankingsImgsVo"/>
+        <where>  
+            <if test="img != null  and img != ''"> and img = #{img}</if>
+        </where>
+    </select>
+    
+    <select id="selectTopRankingsImgsById" parameterType="Long" resultMap="TopRankingsImgsResult">
+        <include refid="selectTopRankingsImgsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTopRankingsImgs" parameterType="TopRankingsImgs" useGeneratedKeys="true" keyProperty="id">
+        insert into top_rankings_imgs
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="img != null">img,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="img != null">#{img},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTopRankingsImgs" parameterType="TopRankingsImgs">
+        update top_rankings_imgs
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="img != null">img = #{img},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTopRankingsImgsById" parameterType="Long">
+        delete from top_rankings_imgs where id = #{id}
+    </delete>
+
+    <delete id="deleteTopRankingsImgsByIds" parameterType="String">
+        delete from top_rankings_imgs where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

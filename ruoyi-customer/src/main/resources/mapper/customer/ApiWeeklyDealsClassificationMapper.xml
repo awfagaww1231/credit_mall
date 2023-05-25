@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.customer.mapper.ApiWeeklyDealsClassificationMapper">
+
+
+    <resultMap id="goodsInfoListByCategoryMap" type="com.ruoyi.customer.domain.ApiGoodsInfo">
+        <result column="id" property="id"></result>
+        <result column="shop_id" property="shopId"></result>
+        <result column="shop_name" property="shopName"></result>
+        <result column="shop_logo" property="shopLogo"></result>
+        <result column="goods_id" property="goodsId"></result>
+        <result column="goods_name" property="goodsName"></result>
+        <result column="goods_img" property="goodsImg"></result>
+        <result column="img_list" property="imgList"></result>
+        <result column="minor_class" property="minorClass"></result>
+        <result column="single_price" property="singlePrice"></result>
+        <result column="platform_goods_status" property="platformGoodsStatus"></result>
+        <result column="discount_price" property="discountPrice"></result>
+        <result column="introduce" property="introduce"></result>
+        <result column="detail" property="detail"></result>
+    </resultMap>
+
+    <select id="weeklyDealsTopGoods" resultMap="goodsInfoListByCategoryMap">
+        select b.id,shop_id,shop_name,shop_logo,goods_id,goods_name,goods_img,img_list,c.status platform_goods_status,
+               minor_class,introduce, detail,single_price,b.discount_price
+        from weekly_deals_classification_goods a
+                 left join shop_goods_info b
+                           on a.shop_goods_info_id = b.id
+                 left join platform_goods_info c
+                           on c.id = goods_id
+                 left join shop_info d
+                           on d.id = shop_id
+        where classification_id = 1
+        limit 0,3
+    </select>
+
+    <resultMap type="ApiWeeklyDealsClassification" id="WeeklyDealsClassificationResult">
+        <result property="id"    column="id"    />
+        <result property="classificationName"    column="classification_name"    />
+        <result property="classificationNameEn"    column="classification_name_en"    />
+        <result property="classificationNameTc"    column="classification_name_tc"    />
+        <result property="classificationNameDe"    column="classification_name_de"    />
+        <result property="classificationNameEs"    column="classification_name_es"    />
+        <result property="classificationNameFr"    column="classification_name_fr"    />
+        <result property="classificationNameIdn"    column="classification_name_idn"    />
+        <result property="classificationNameJp"    column="classification_name_jp"    />
+        <result property="classificationNameKo"    column="classification_name_ko"    />
+        <result property="classificationNameMy"    column="classification_name_my"    />
+        <result property="classificationNameTh"    column="classification_name_th"    />
+        <result property="classificationNameVi"    column="classification_name_vi"    />
+        <result property="classificationNamePt"    column="classification_name_pt"    />
+        <result property="classificationNameRus"    column="classification_name_rus"    />
+        <result property="classificationNameBlr"    column="classification_name_blr"    />
+        <result property="classificationNameIda"    column="classification_name_ida"    />
+        <result property="classificationNameSa"    column="classification_name_sa"    />
+        <result property="classificationNameAr"    column="classification_name_ar"    />
+        <result property="classificationNameIt"    column="classification_name_it"    />
+    </resultMap>
+    <select id="weeklyDealsClassificationList" resultMap="WeeklyDealsClassificationResult">
+        select id, classification_name, classification_name_en, classification_name_tc, classification_name_de, classification_name_es, classification_name_fr, classification_name_idn, classification_name_jp, classification_name_ko, classification_name_my, classification_name_th, classification_name_vi, classification_name_pt, classification_name_rus, classification_name_blr, classification_name_ida, classification_name_sa, classification_name_ar, classification_name_it
+            from weekly_deals_classification where id != 1
+    </select>
+
+    <select id="shopGoodsListClassification" resultMap="goodsInfoListByCategoryMap">
+        select b.id,shop_id,shop_name,shop_logo,goods_id,goods_name,goods_img,img_list,c.status platform_goods_status,
+               minor_class,introduce, detail,single_price,b.discount_price
+        from weekly_deals_classification_goods a
+                 left join shop_goods_info b
+                           on a.shop_goods_info_id = b.id
+                 left join (SELECT
+                                a.id,
+                                IFNULL( b.goods_name, a.goods_name ) goods_name,
+                                IFNULL( b.goods_img, a.goods_img ) goods_img,
+                                IFNULL( b.img_list, a.img_list ) img_list,
+                                price,
+                                discount_price,
+                                minor_class,
+                                goods_inventory,
+                                create_time,
+                                update_time,
+                                IFNULL( b.detail, a.detail ) detail,
+                                IFNULL( b.introduce, a.introduce ) introduce,
+                                STATUS,
+                                is_del
+                            FROM
+                                platform_goods_info a
+                                    LEFT JOIN platform_goods_info_language b ON a.id = b.goods_id
+                                    AND b.language_id = #{languageId}) c
+                           on c.id = goods_id
+                 left join shop_info d
+                           on d.id = shop_id
+        where classification_id = #{classificationId}
+    </select>
+</mapper>

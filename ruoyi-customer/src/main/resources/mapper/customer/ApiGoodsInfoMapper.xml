@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.customer.mapper.ApiGoodsInfoMapper">
+
+
+    <resultMap id="goodsInfoListByCategoryMap" type="com.ruoyi.customer.domain.ApiGoodsInfo">
+        <result column="id" property="id"></result>
+        <result column="shop_id" property="shopId"></result>
+        <result column="shop_name" property="shopName"></result>
+        <result column="shop_name_lang" property="shopNameLang"></result>
+        <result column="shop_logo" property="shopLogo"></result>
+        <result column="goods_id" property="goodsId"></result>
+        <result column="goods_name" property="goodsName"></result>
+        <result column="goods_img" property="goodsImg"></result>
+        <result column="img_list" property="imgList"></result>
+        <result column="minor_class" property="minorClass"></result>
+        <result column="single_price" property="singlePrice"></result>
+        <result column="platform_goods_status" property="platformGoodsStatus"></result>
+        <result column="discount_price" property="discountPrice"></result>
+        <result column="introduce" property="introduce"></result>
+        <result column="detail" property="detail"></result>
+    </resultMap>
+    <select id="goodsInfoListByCategory"  resultMap="goodsInfoListByCategoryMap">
+        select a.id,shop_id,shop_name,shop_name_lang,shop_logo,goods_id,goods_name,goods_img,img_list,a.status platform_goods_status,minor_class,introduce, detail,single_price,a.discount_price
+        from shop_goods_info a
+                 left join platform_goods_info b
+                           on a.goods_id = b.id
+                 left join shop_info c
+                           on c.id = a.shop_id
+        where minor_class = #{category}
+        and a.status = 0 and is_del = 0
+    </select>
+    <select id="specialGoodsList" resultMap="goodsInfoListByCategoryMap">
+        select a.id,shop_id,shop_name,shop_name_lang,shop_logo,goods_id,goods_name,goods_img,img_list,a.status platform_goods_status,minor_class,introduce, detail,single_price,a.discount_price
+        from shop_goods_info a
+                 left join platform_goods_info b
+                           on a.goods_id = b.id
+                 left join shop_info c
+                           on c.id = a.shop_id
+        where is_special = 1
+        and a.status = 0 and is_del = 0
+    </select>
+    <select id="featuredGoodsList" resultMap="goodsInfoListByCategoryMap">
+        select a.id,shop_id,shop_name,shop_name_lang,shop_logo,goods_id,goods_name,goods_img,img_list,a.status platform_goods_status,minor_class,introduce, detail,single_price,a.discount_price
+        from shop_goods_info a
+                 left join platform_goods_info b
+                           on a.goods_id = b.id
+                 left join shop_info c
+                           on c.id = a.shop_id
+        where is_featured = 1
+        and a.status = 0 and is_del = 0
+    </select>
+
+    <select id="goodsInfoByShopGoodsId"  resultMap="goodsInfoListByCategoryMap">
+        select a.id,shop_id,shop_name,shop_name_lang,shop_logo,goods_id,goods_name,goods_img,img_list,a.status platform_goods_status,minor_class,introduce, detail,single_price,a.discount_price
+        from shop_goods_info a
+                 left join platform_goods_info b
+                           on a.goods_id = b.id
+                 left join shop_info c
+                           on c.id = a.shop_id
+        where a.id = #{shopGoodsId}
+        and a.status = 0 and is_del = 0
+    </select>
+
+    <select id="shopGoodsInfoByShopId" resultMap="goodsInfoListByCategoryMap">
+        select a.id,shop_id,shop_name,shop_name_lang,shop_logo,goods_id,goods_name,goods_img,img_list,a.status platform_goods_status,minor_class,introduce, detail,single_price,a.discount_price
+        from shop_goods_info a
+                 left join platform_goods_info b
+                           on a.goods_id = b.id
+                 left join shop_info c
+                           on c.id = a.shop_id
+        where shop_id = #{shopId}
+        and a.status = 0 and is_del = 0
+    </select>
+
+    <select id="selectGoodsInfoList"  resultMap="goodsInfoListByCategoryMap">
+        select a.id,shop_id,shop_name,shop_name_lang,shop_logo,a.goods_id,goods_name,goods_img,img_list,a.status platform_goods_status,minor_class,introduce, detail,single_price,a.discount_price
+        from shop_goods_info a
+        left join platform_goods_info b
+        on a.goods_id = b.id
+        left join shop_info c
+        on c.id = a.shop_id
+        left join goods_brand_bind d
+        on d.goods_id = a.goods_id
+        <where>
+            <if test="goodsName != null">and goods_name like concat('%',#{goodsName},'%')</if>
+            <if test="brandIds != null"> and goods_brand_id in
+                <foreach item="brandId" collection="brandIds" open="(" separator="," close=")">
+                    #{brandId}
+                </foreach>
+            </if>
+            and a.status = 0 and is_del = 0
+        </where>
+    </select>
+
+    <select id="selectLanguageObject"  resultMap="goodsInfoListByCategoryMap">
+        select goods_name, goods_img, img_list, detail, introduce from platform_goods_info_language
+        where goods_id = #{goodsId} and language_id = #{languageId}
+    </select>
+
+    <select id="querySales" resultType="java.lang.Integer">
+        select sum(quantity) from shop_order
+        where shop_goods_info_id = #{shopGoodsId}
+        and (status = 1 or status = 3 or status = 4 or status = 5 or status = 6 or status = 7)
+    </select>
+
+    <select id="mayLikeShopGoodsList" resultMap="goodsInfoListByCategoryMap">
+        select a.id,shop_id,shop_name,shop_name_lang,shop_logo,goods_id,goods_name,goods_img,img_list,a.status platform_goods_status,minor_class,introduce, detail,single_price,a.discount_price
+        from shop_goods_info a
+                 left join platform_goods_info b
+                           on a.goods_id = b.id
+                 left join shop_info c
+                           on c.id = a.shop_id
+        order by rand()
+    </select>
+
+
+    <select id="shopGoodsInfoListByBrandId" resultMap="goodsInfoListByCategoryMap">
+        select a.id,shop_id,shop_name,shop_name_lang,shop_logo,goods_id,goods_name,goods_img,img_list,a.status platform_goods_status,minor_class,introduce, detail,single_price,a.discount_price
+        from shop_goods_info a
+                 left join platform_goods_info b
+                           on a.goods_id = b.id
+                 left join shop_info c
+                           on c.id = a.shop_id
+    </select>
+</mapper>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ShopGoodsInfoMapper">
+    
+    <resultMap type="ShopGoodsInfo" id="ShopGoodsInfoResult">
+        <result property="id"    column="id"    />
+        <result property="shopId"    column="shop_id"    />
+        <result property="goodsId"    column="goods_id"    />
+        <result property="goodsName"    column="goods_name"    />
+        <result property="goodsImg"    column="goods_img"    />
+        <result property="minorClass"    column="minor_class"    />
+        <result property="detail"    column="detail"    />
+        <result property="introduce"    column="introduce"    />
+<!--        <result property="platformPrice"    column="platform_price"    />-->
+        <result property="singlePrice"    column="platform_price"    />
+        <result property="discountPrice"    column="discount_price"    />
+        <result property="status"    column="status"    />
+        <result property="shopName"    column="shop_name"    />
+        <result property="shopLogo"    column="shop_logo"    />
+        <result property="sellerId"    column="seller_id"    />
+        <result property="shopTel"    column="shop_tel"    />
+        <result property="isFeatured"    column="is_featured"    />
+        <result property="isSpecial"    column="is_special"    />
+    </resultMap>
+
+    <sql id="selectShopGoodsInfoVo">
+        select a.id, shop_id,shop_name,shop_logo,shop_tel, goods_id, goods_name, goods_img,price platform_price,
+               minor_class,detail,introduce ,single_price, a.discount_price, a.status,is_featured,is_special,shop_owner_id seller_id
+        from shop_goods_info a
+                 left join platform_goods_info b
+                           on goods_id = b.id
+                 left join shop_info c
+                           on shop_id = c.id
+    </sql>
+
+    <select id="selectShopGoodsInfoList" parameterType="ShopGoodsInfo" resultMap="ShopGoodsInfoResult">
+        <include refid="selectShopGoodsInfoVo"/>
+        <where>  
+            <if test="shopId != null "> and shop_id = #{shopId}</if>
+            <if test="goodsName != null  and goodsName != ''"> and goods_name like concat('%', #{goodsName}, '%')</if>
+            <if test="goodsId != null "> and goods_id = #{goodsId}</if>
+            <if test="singlePrice != null "> and single_price = #{singlePrice}</if>
+            <if test="discountPrice != null "> and discount_price = #{discountPrice}</if>
+            <if test="status != null &amp; status != -1"> and a.status = #{status}</if>
+            <if test="status != null &amp; status == -1"> and (a.status = 0 or a.status = 1) </if>
+            <if test="isFeatured != null "> and is_featured = #{isFeatured}</if>
+            <if test="shopStatus != null "> and c.status = #{shopStatus}</if>
+            <if test="platformGoodsStatus != null "> and b.status = #{platformGoodsStatus}</if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+    </select>
+    
+    <select id="selectShopGoodsInfoById" parameterType="Long" resultMap="ShopGoodsInfoResult">
+        <include refid="selectShopGoodsInfoVo"/>
+        where a.id = #{id}
+    </select>
+
+    <select id="selectShopGoodsInfoByShopIdAndGoodsId" parameterType="Long" resultMap="ShopGoodsInfoResult">
+        <include refid="selectShopGoodsInfoVo"/>
+        where shop_id = #{shopId} and goods_id = #{goodsId}
+    </select>
+    <select id="selectShopGoodsInfoRandom" resultMap="ShopGoodsInfoResult">
+        <include refid="selectShopGoodsInfoVo"/>
+        where a.status = 0 order by rand() limit 1
+    </select>
+
+    <insert id="insertShopGoodsInfo" parameterType="ShopGoodsInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into shop_goods_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="shopId != null">shop_id,</if>
+            <if test="goodsId != null">goods_id,</if>
+            <if test="singlePrice != null">single_price,</if>
+            <if test="discountPrice != null">discount_price,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="shopId != null">#{shopId},</if>
+            <if test="goodsId != null">#{goodsId},</if>
+            <if test="singlePrice != null">#{singlePrice},</if>
+            <if test="discountPrice != null">#{discountPrice},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateShopGoodsInfo" parameterType="ShopGoodsInfo">
+        update shop_goods_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="shopId != null">shop_id = #{shopId},</if>
+            <if test="goodsId != null">goods_id = #{goodsId},</if>
+            <if test="singlePrice != null">single_price = #{singlePrice},</if>
+            <if test="discountPrice != null">discount_price = #{discountPrice},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="toSetFeatured">
+        update shop_goods_info set is_featured = 1 where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    <update id="toCancelFeatured">
+        update shop_goods_info set is_featured = 0 where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="toSetSpecial">
+        update shop_goods_info set is_special = 1 where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    <update id="toCancelSpecial">
+        update shop_goods_info set is_special = 0 where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    <update id="updatePriceByGoodsId">
+        update shop_goods_info set single_price = #{price} where goods_id = #{goodsId}
+    </update>
+
+    <update id="updateDiscountPriceByGoodsId">
+        update shop_goods_info set discount_price = #{discountPrice} where goods_id = #{goodsId}
+    </update>
+
+    <delete id="deleteShopGoodsInfoById" parameterType="Long">
+        delete from shop_goods_info where id = #{id}
+    </delete>
+
+    <delete id="deleteShopGoodsInfoByIds" parameterType="String">
+        delete from shop_goods_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

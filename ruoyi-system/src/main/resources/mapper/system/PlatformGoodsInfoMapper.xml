@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.PlatformGoodsInfoMapper">
+    
+    <resultMap type="PlatformGoodsInfo" id="PlatformGoodsInfoResult">
+        <result property="id"    column="id"    />
+        <result property="goodsName"    column="goods_name"    />
+        <result property="goodsImg"    column="goods_img"    />
+        <result property="price"    column="price"    />
+        <result property="discountPrice"    column="discount_price"    />
+        <result property="minorClass"    column="minor_class"    />
+        <result property="goodsInventory"    column="goods_inventory"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="detail"    column="detail"    />
+        <result property="introduce"    column="introduce"    />
+        <result property="status"    column="status"    />
+        <result property="isDel"    column="is_del"    />
+        <result property="categoryName"    column="category_name"    />
+        <result property="imgList"    column="img_list"    />
+        <result property="itemCode"    column="item_code"    />
+        <result property="itemUrl"    column="item_url"    />
+    </resultMap>
+
+    <sql id="selectPlatformGoodsInfoVo">
+        select id, goods_name, goods_img,img_list, price,discount_price, minor_class, goods_inventory, create_time, update_time, detail, introduce, status, is_del,item_code,item_url from platform_goods_info
+    </sql>
+
+    <select id="selectPlatformGoodsInfoList" parameterType="PlatformGoodsInfo" resultMap="PlatformGoodsInfoResult">
+        SELECT
+            a.id,
+            IFNULL(b.goods_name,a.goods_name) goods_name,
+            IFNULL(b.goods_img,a.goods_img) goods_img,
+            IFNULL(b.img_list,a.img_list) img_list,
+            price,
+            discount_price,
+            minor_class,
+            goods_inventory,
+            create_time,
+            update_time,
+            IFNULL(b.detail,a.detail) detail,
+            IFNULL(b.introduce,a.introduce) introduce,
+            STATUS,
+            is_del,item_code,item_url
+        FROM
+            platform_goods_info a
+        LEFT JOIN platform_goods_info_language b ON a.id = b.goods_id
+        AND b.language_id = #{languageId}
+        <where>  
+            <if test="goodsName != null  and goodsName != ''"> and a.goods_name like concat('%', #{goodsName}, '%')</if>
+            <if test="goodsImg != null  and goodsImg != ''"> and a.goods_img = #{goodsImg}</if>
+            <if test="price != null "> and a.price = #{price}</if>
+            <if test="minorClass != null "> and a.minor_class = #{minorClass}</if>
+            <if test="goodsInventory != null "> and a.goods_inventory = #{goodsInventory}</if>
+            <if test="detail != null  and detail != ''"> and a.detail = #{detail}</if>
+            <if test="introduce != null  and introduce != ''"> and a.introduce = #{introduce}</if>
+            <if test="status != null "> and a.status = #{status}</if>
+            <if test="isDel != null "> and a.is_del = #{isDel} </if>
+        </where>
+        order by a.create_time desc
+    </select>
+    
+    <select id="selectPlatformGoodsInfoById" parameterType="Long" resultMap="PlatformGoodsInfoResult">
+        <include refid="selectPlatformGoodsInfoVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectPlatformGoodsInfoLanguageById" resultMap="PlatformGoodsInfoResult">
+        SELECT
+            a.id,
+            IFNULL(b.goods_name,a.goods_name) goods_name,
+            IFNULL(b.goods_img,a.goods_img) goods_img,
+            IFNULL(b.img_list,a.img_list) img_list,
+            price,
+            discount_price,
+            minor_class,
+            goods_inventory,
+            create_time,
+            update_time,
+            IFNULL(b.detail,a.detail) detail,
+            IFNULL(b.introduce,a.introduce) introduce,
+            STATUS,
+            is_del,item_code,item_url
+        FROM
+            platform_goods_info a
+            LEFT JOIN platform_goods_info_language b ON a.id = b.goods_id AND b.language_id = #{languageId}
+        where a.id = #{id}
+    </select>
+
+    <select id="selectLanguageObject"  resultMap="PlatformGoodsInfoResult">
+        select goods_name, goods_img, img_list, detail, introduce from platform_goods_info_language
+        where goods_id = #{goodsId} and language_id = #{languageId}
+    </select>
+
+    <insert id="insertPlatformGoodsInfo" parameterType="PlatformGoodsInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into platform_goods_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="goodsName != null">goods_name,</if>
+            <if test="goodsImg != null">goods_img,</if>
+            <if test="price != null">price,</if>
+            <if test="discountPrice != null">discount_price,</if>
+            <if test="minorClass != null">minor_class,</if>
+            <if test="goodsInventory != null">goods_inventory,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="detail != null">detail,</if>
+            <if test="introduce != null">introduce,</if>
+            <if test="status != null">status,</if>
+            <if test="isDel != null">is_del,</if>
+            <if test="imgList != null">img_list,</if>
+            <if test="itemCode != null">item_code,</if>
+            <if test="itemUrl != null">item_url,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="goodsName != null">#{goodsName},</if>
+            <if test="goodsImg != null">#{goodsImg},</if>
+            <if test="price != null">#{price},</if>
+            <if test="discountPrice != null">#{discountPrice},</if>
+            <if test="minorClass != null">#{minorClass},</if>
+            <if test="goodsInventory != null">#{goodsInventory},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="detail != null">#{detail},</if>
+            <if test="introduce != null">#{introduce},</if>
+            <if test="status != null">#{status},</if>
+            <if test="isDel != null">#{isDel},</if>
+            <if test="imgList != null">#{imgList},</if>
+            <if test="itemCode != null">#{itemCode},</if>
+            <if test="itemUrl != null">#{itemUrl},</if>
+         </trim>
+    </insert>
+    <insert id="insertLanguageValue">
+        insert into platform_goods_info_language (goods_name, goods_img, img_list, detail, introduce, language_id, goods_id)
+        values (#{goodsName},#{goodsImg},#{imgList},#{detail},#{introduce},#{languageId},#{id})
+    </insert>
+
+    <insert id="insertUser" parameterType="SysUser" useGeneratedKeys="true" keyProperty="userId">
+        insert into sys_user(
+        <if test="userId != null and userId != 0">user_id,</if>
+        <if test="deptId != null and deptId != 0">dept_id,</if>
+        <if test="userName != null and userName != ''">user_name,</if>
+        <if test="nickName != null and nickName != ''">nick_name,</if>
+        <if test="email != null and email != ''">email,</if>
+        <if test="avatar != null and avatar != ''">avatar,</if>
+        <if test="phonenumber != null and phonenumber != ''">phonenumber,</if>
+        <if test="sex != null and sex != ''">sex,</if>
+        <if test="password != null and password != ''">password,</if>
+        <if test="status != null and status != ''">status,</if>
+        <if test="createBy != null and createBy != ''">create_by,</if>
+        <if test="remark != null and remark != ''">remark,</if>
+        <if test="referralCode != null and referralCode != ''">referral_code,</if>
+        create_time
+        )values(
+        <if test="userId != null and userId != ''">#{userId},</if>
+        <if test="deptId != null and deptId != ''">#{deptId},</if>
+        <if test="userName != null and userName != ''">#{userName},</if>
+        <if test="nickName != null and nickName != ''">#{nickName},</if>
+        <if test="email != null and email != ''">#{email},</if>
+        <if test="avatar != null and avatar != ''">#{avatar},</if>
+        <if test="phonenumber != null and phonenumber != ''">#{phonenumber},</if>
+        <if test="sex != null and sex != ''">#{sex},</if>
+        <if test="password != null and password != ''">#{password},</if>
+        <if test="status != null and status != ''">#{status},</if>
+        <if test="createBy != null and createBy != ''">#{createBy},</if>
+        <if test="remark != null and remark != ''">#{remark},</if>
+        <if test="referralCode != null and referralCode != ''">#{referralCode},</if>
+        sysdate()
+        )
+    </insert>
+    <update id="updatePlatformGoodsInfo" parameterType="PlatformGoodsInfo">
+        update platform_goods_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="goodsName != null">goods_name = #{goodsName},</if>
+            <if test="goodsImg != null">goods_img = #{goodsImg},</if>
+            <if test="price != null">price = #{price},</if>
+            discount_price = #{discountPrice},
+            <if test="minorClass != null">minor_class = #{minorClass},</if>
+            <if test="goodsInventory != null">goods_inventory = #{goodsInventory},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="detail != null">detail = #{detail},</if>
+            <if test="introduce != null">introduce = #{introduce},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="isDel != null">is_del = #{isDel},</if>
+            <if test="imgList != null">img_list = #{imgList},</if>
+            <if test="itemCode != null">item_code = #{itemCode},</if>
+            <if test="itemUrl != null">item_url = #{itemUrl},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="onTheShelf">
+        update platform_goods_info set status = 0 where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    <update id="offTheShelf">
+        update platform_goods_info set status = 1 where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <delete id="deletePlatformGoodsInfoById" parameterType="Long">
+        update platform_goods_info set is_del = 1 where id = #{id}
+    </delete>
+
+    <update id="deletePlatformGoodsInfoByIds" parameterType="String">
+        update platform_goods_info set is_del = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="delete">
+        update platform_goods_info set status = 2 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    <update id="changeLanguageValue">
+        update platform_goods_info_language
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="goodsName != null">goods_name = #{goodsName},</if>
+            <if test="goodsImg != null">goods_img = #{goodsImg},</if>
+            <if test="detail != null">detail = #{detail},</if>
+            <if test="introduce != null">introduce = #{introduce},</if>
+            <if test="imgList != null">img_list = #{imgList},</if>
+        </trim>
+        where language_id = #{languageId} and goods_id = #{id}
+    </update>
+</mapper>

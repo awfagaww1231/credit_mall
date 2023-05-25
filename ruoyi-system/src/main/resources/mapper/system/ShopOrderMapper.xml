@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ShopOrderMapper">
+    
+    <resultMap type="ShopOrder" id="ShopOrderResult">
+        <result property="id"    column="id"    />
+        <result property="orderCode"    column="order_code"    />
+        <result property="goodsId"    column="goods_id"    />
+        <result property="goodsName"    column="goods_name"    />
+        <result property="platformPrice"    column="platformPrice"    />
+        <result property="quantity"    column="quantity"    />
+        <result property="singlePrice"    column="single_price"    />
+        <result property="totalPrice"    column="total_price"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="payTime"    column="pay_time"    />
+        <result property="shipTime"    column="ship_time"    />
+        <result property="finishTime"    column="finish_time"    />
+        <result property="receiveInfo"    column="receive_info"    />
+        <result property="remark"    column="remark"    />
+        <result property="status"    column="status"    />
+        <result property="shopId"    column="shop_id"    />
+        <result property="sellerId"    column="seller_id"    />
+        <result property="shopName"    column="shop_name"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="mobile"    column="mobile"    />
+    </resultMap>
+
+    <sql id="selectShopOrderVo">
+        select a.id, order_code, goods_id, goods_name ,quantity, single_price, total_price,
+               a.create_time, pay_time,ship_time, finish_time, receive_info, a.remark, a.status, shop_id,
+               shop_owner_id seller_id,shop_name,user_id,user_name,nick_name,mobile
+        from shop_order a
+                 left join platform_goods_info b
+                           on a.goods_id = b.id
+                 left join shop_info c
+                           on a.shop_id = c.id
+                 left join user_info d
+                           on a.user_id = d.id
+    </sql>
+
+    <select id="selectShopOrderList" parameterType="ShopOrder" resultMap="ShopOrderResult">
+        <include refid="selectShopOrderVo"/>
+        <where>  
+            <if test="orderCode != null  and orderCode != ''"> and order_code = #{orderCode}</if>
+            <if test="goodsId != null "> and goods_id = #{goodsId}</if>
+            <if test="quantity != null "> and quantity = #{quantity}</if>
+            <if test="singlePrice != null "> and single_price = #{singlePrice}</if>
+            <if test="totalPrice != null "> and total_price = #{totalPrice}</if>
+            <if test="payTime != null "> and pay_time = #{payTime}</if>
+            <if test="shipTime != null "> and ship_time = #{shipTime}</if>
+            <if test="finishTime != null "> and finish_time = #{finishTime}</if>
+            <if test="receiveInfo != null  and receiveInfo != ''"> and receive_info = #{receiveInfo}</if>
+            <if test="status != null "> and a.status = #{status}</if>
+            <if test="shopId != null "> and shop_id = #{shopId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+        order by a.status = 1 desc,a.create_time desc
+    </select>
+    
+    <select id="selectShopOrderById" parameterType="Long" resultMap="ShopOrderResult">
+        <include refid="selectShopOrderVo"/>
+        where a.id = #{id}
+    </select>
+    <select id="selectSellerIdByShopId" resultType="java.lang.Long">
+        select shop_owner_id from shop_info where id = #{shopId}
+    </select>
+
+    <insert id="insertShopOrder" parameterType="ShopOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into shop_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderCode != null and orderCode != ''">order_code,</if>
+            <if test="goodsId != null">goods_id,</if>
+            <if test="quantity != null">quantity,</if>
+            <if test="singlePrice != null">single_price,</if>
+            <if test="totalPrice != null">total_price,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="payTime != null">pay_time,</if>
+            <if test="shipTime != null">ship_time,</if>
+            <if test="finishTime != null">finish_time,</if>
+            <if test="receiveInfo != null">receive_info,</if>
+            <if test="remark != null">remark,</if>
+            <if test="status != null">status,</if>
+            <if test="shopId != null">shop_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="shopGoodsInfoId != null">shop_goods_info_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderCode != null and orderCode != ''">#{orderCode},</if>
+            <if test="goodsId != null">#{goodsId},</if>
+            <if test="quantity != null">#{quantity},</if>
+            <if test="singlePrice != null">#{singlePrice},</if>
+            <if test="totalPrice != null">#{totalPrice},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="payTime != null">#{payTime},</if>
+            <if test="shipTime != null">#{shipTime},</if>
+            <if test="finishTime != null">#{finishTime},</if>
+            <if test="receiveInfo != null">#{receiveInfo},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="status != null">#{status},</if>
+            <if test="shopId != null">#{shopId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="shopGoodsInfoId != null">#{shopGoodsInfoId},</if>
+         </trim>
+    </insert>
+    <insert id="submitShopOrder">
+        insert into supply_order2 (order_code, goods_id, quantity, single_price, total_price, create_time,
+        status, seller_id,shop_order_id,pay_time,remark)
+        <foreach item="supplyOrder" collection="supplyOrders" open="values" separator="," close="">
+            (#{supplyOrder.orderCode},#{supplyOrder.goodsId},#{supplyOrder.quantity},#{supplyOrder.singlePrice},#{supplyOrder.totalPrice},
+                #{supplyOrder.createTime},#{supplyOrder.status},#{supplyOrder.sellerId},#{supplyOrder.shopOrderId},#{supplyOrder.payTime},#{supplyOrder.remark})
+        </foreach>
+    </insert>
+
+    <update id="updateShopOrder" parameterType="ShopOrder">
+        update shop_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderCode != null and orderCode != ''">order_code = #{orderCode},</if>
+            <if test="goodsId != null">goods_id = #{goodsId},</if>
+            <if test="quantity != null">quantity = #{quantity},</if>
+            <if test="singlePrice != null">single_price = #{singlePrice},</if>
+            <if test="totalPrice != null">total_price = #{totalPrice},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="payTime != null">pay_time = #{payTime},</if>
+            <if test="shipTime != null">ship_time = #{shipTime},</if>
+            <if test="finishTime != null">finish_time = #{finishTime},</if>
+            <if test="receiveInfo != null">receive_info = #{receiveInfo},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="shopId != null">shop_id = #{shopId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteShopOrderById" parameterType="Long">
+        delete from shop_order where id = #{id}
+    </delete>
+
+    <delete id="deleteShopOrderByIds" parameterType="String">
+        delete from shop_order where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

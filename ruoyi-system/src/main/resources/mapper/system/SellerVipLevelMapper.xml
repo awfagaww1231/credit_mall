@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SellerVipLevelMapper">
+    
+    <resultMap type="SellerVipLevel" id="SellerVipLevelResult">
+        <result property="id"    column="id"    />
+        <result property="sellerId"    column="seller_id"    />
+        <result property="vipLevel"    column="vip_level"    />
+    </resultMap>
+
+    <sql id="selectSellerVipLevelVo">
+        select id, seller_id, vip_level from seller_vip_level
+    </sql>
+
+    <select id="selectSellerVipLevelList" parameterType="SellerVipLevel" resultMap="SellerVipLevelResult">
+        <include refid="selectSellerVipLevelVo"/>
+        <where>  
+            <if test="sellerId != null "> and seller_id = #{sellerId}</if>
+            <if test="vipLevel != null "> and vip_level = #{vipLevel}</if>
+        </where>
+    </select>
+    
+    <select id="selectSellerVipLevelById" parameterType="Long" resultMap="SellerVipLevelResult">
+        <include refid="selectSellerVipLevelVo"/>
+        where id = #{id}
+    </select>
+
+
+    <select id="selectSellerVipLevelBySellerId" parameterType="Long" resultMap="SellerVipLevelResult">
+        <include refid="selectSellerVipLevelVo"/>
+        where seller_id = #{sellerId}
+    </select>
+
+
+    <insert id="insertSellerVipLevel" parameterType="SellerVipLevel" useGeneratedKeys="true" keyProperty="id">
+        insert into seller_vip_level
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sellerId != null">seller_id,</if>
+            <if test="vipLevel != null">vip_level,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sellerId != null">#{sellerId},</if>
+            <if test="vipLevel != null">#{vipLevel},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSellerVipLevel" parameterType="SellerVipLevel">
+        update seller_vip_level
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sellerId != null">seller_id = #{sellerId},</if>
+            <if test="vipLevel != null">vip_level = #{vipLevel},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSellerVipLevelById" parameterType="Long">
+        delete from seller_vip_level where id = #{id}
+    </delete>
+
+    <delete id="deleteSellerVipLevelByIds" parameterType="String">
+        delete from seller_vip_level where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

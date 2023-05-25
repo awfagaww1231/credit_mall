@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.customer.mapper.ApiBuyersShowMapper">
+
+    
+    <resultMap type="ApiBuyersShow" id="BuyersShowResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="showTitle"    column="show_title"    />
+        <result property="showContent"    column="show_content"    />
+        <result property="views"    column="views"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="shopGoodsInfoId"    column="shop_goods_info_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="avatar"    column="avatar"    />
+        <result property="showImg"    column="show_img"    />
+    </resultMap>
+
+
+    <select id="selectBuyersShowList" parameterType="ApiBuyersShow" resultMap="BuyersShowResult">
+        select a.id, user_id, show_title, show_content,show_img, views, a.create_time, shop_goods_info_id,user_name,avatar
+        from buyers_show a
+        left join user_info b
+        on a.user_id = b.id
+        left join buyer_show_label_bind c
+        on c.buyers_show_id = a.id
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="showTitle != null  and showTitle != ''"> and show_title = #{showTitle}</if>
+            <if test="showContent != null  and showContent != ''"> and show_content = #{showContent}</if>
+            <if test="views != null "> and views = #{views}</if>
+            <if test="shopGoodsInfoId != null "> and shop_goods_info_id = #{shopGoodsInfoId}</if>
+            <if test="labelId != null "> and label_id = #{labelId}</if>
+        </where>
+        <if test="sortType == 1"> order by views desc</if>
+        <if test="sortType == 2"> order by a.create_time desc</if>
+    </select>
+    
+    <select id="selectBuyersShowById" parameterType="Long" resultMap="BuyersShowResult">
+        select a.id, user_id, show_title, show_content,show_img, views, a.create_time, shop_goods_info_id,user_name,avatar
+        from buyers_show a
+                 left join user_info b
+                           on a.user_id = b.id
+        where a.id = #{id}
+    </select>
+
+    <resultMap type="ApiBuyersShowLabel" id="BuyersShowLabelResult">
+        <result property="id"    column="id"    />
+        <result property="labelName"    column="label_name"    />
+    </resultMap>
+
+    <select id="selectBindLabelByBuyersShowId" resultMap="BuyersShowLabelResult">
+        select b.id,label_name
+        from buyer_show_label_bind a
+                 left join buyers_show_label b
+                           on a.label_id = b.id
+        where buyers_show_id = 1
+    </select>
+
+
+    <insert id="insertBuyersShow" parameterType="ApiBuyersShow" useGeneratedKeys="true" keyProperty="id">
+        insert into buyers_show
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="showTitle != null">show_title,</if>
+            <if test="showContent != null">show_content,</if>
+            <if test="views != null">views,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="shopGoodsInfoId != null">shop_goods_info_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="showTitle != null">#{showTitle},</if>
+            <if test="showContent != null">#{showContent},</if>
+            <if test="views != null">#{views},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="shopGoodsInfoId != null">#{shopGoodsInfoId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBuyersShow" parameterType="ApiBuyersShow">
+        update buyers_show
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="showTitle != null">show_title = #{showTitle},</if>
+            <if test="showContent != null">show_content = #{showContent},</if>
+            <if test="views != null">views = #{views},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="shopGoodsInfoId != null">shop_goods_info_id = #{shopGoodsInfoId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBuyersShowById" parameterType="Long">
+        delete from buyers_show where id = #{id}
+    </delete>
+
+    <delete id="deleteBuyersShowByIds" parameterType="String">
+        delete from buyers_show where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.customer.mapper.ApiShopOrderMapper">
+
+    <insert id="insertShopOrder" parameterType="ApiShopOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into shop_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderCode != null and orderCode != ''">order_code,</if>
+            <if test="goodsId != null">goods_id,</if>
+            <if test="quantity != null">quantity,</if>
+            <if test="singlePrice != null">single_price,</if>
+            <if test="totalPrice != null">total_price,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="payTime != null">pay_time,</if>
+            <if test="shipTime != null">ship_time,</if>
+            <if test="finishTime != null">finish_time,</if>
+            <if test="receiveInfo != null">receive_info,</if>
+            <if test="remark != null">remark,</if>
+            <if test="status != null">status,</if>
+            <if test="shopId != null">shop_id,</if>
+            <if test="userId != null">user_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderCode != null and orderCode != ''">#{orderCode},</if>
+            <if test="goodsId != null">#{goodsId},</if>
+            <if test="quantity != null">#{quantity},</if>
+            <if test="singlePrice != null">#{singlePrice},</if>
+            <if test="totalPrice != null">#{totalPrice},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="payTime != null">#{payTime},</if>
+            <if test="shipTime != null">#{shipTime},</if>
+            <if test="finishTime != null">#{finishTime},</if>
+            <if test="receiveInfo != null">#{receiveInfo},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="status != null">#{status},</if>
+            <if test="shopId != null">#{shopId},</if>
+            <if test="userId != null">#{userId},</if>
+        </trim>
+    </insert>
+    <insert id="insertShopOrders" useGeneratedKeys="true" keyProperty="id">
+        insert into shop_order (order_code,goods_id,quantity,single_price,total_price,create_time,pay_time,receive_info,remark,status,shop_id,user_id,shop_goods_info_id,specification,pay_method)
+        <foreach item="apiShopOrder" collection="apiShopOrders" open="values(" separator="),(" close=")">
+            #{apiShopOrder.orderCode},#{apiShopOrder.goodsId},#{apiShopOrder.quantity},#{apiShopOrder.singlePrice},#{apiShopOrder.totalPrice},
+            #{apiShopOrder.createTime},#{apiShopOrder.payTime},#{apiShopOrder.receiveInfo},#{apiShopOrder.remark},#{apiShopOrder.status},
+            #{apiShopOrder.shopId},#{apiShopOrder.userId},#{apiShopOrder.shopGoodsInfoId},#{apiShopOrder.specification},#{apiShopOrder.payMethod}
+        </foreach>
+    </insert>
+
+    <update id="updateShopOrder" parameterType="ApiShopOrder">
+        update shop_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderCode != null and orderCode != ''">order_code = #{orderCode},</if>
+            <if test="goodsId != null">goods_id = #{goodsId},</if>
+            <if test="quantity != null">quantity = #{quantity},</if>
+            <if test="singlePrice != null">single_price = #{singlePrice},</if>
+            <if test="totalPrice != null">total_price = #{totalPrice},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="payTime != null">pay_time = #{payTime},</if>
+            <if test="shipTime != null">ship_time = #{shipTime},</if>
+            <if test="finishTime != null">finish_time = #{finishTime},</if>
+            <if test="receiveInfo != null">receive_info = #{receiveInfo},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="shopId != null">shop_id = #{shopId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteShopOrderByIds" parameterType="String">
+        delete from shop_order where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <resultMap type="ApiShopOrder" id="ShopOrderResult">
+        <result property="id"    column="id"    />
+        <result property="orderCode"    column="order_code"    />
+        <result property="goodsId"    column="goods_id"    />
+        <result property="goodsName"    column="goods_name"    />
+        <result property="goodsImg"    column="goods_img"    />
+        <result property="introduce"    column="introduce"    />
+        <result property="detail"    column="detail"    />
+        <result property="platformPrice"    column="platformPrice"    />
+        <result property="quantity"    column="quantity"    />
+        <result property="singlePrice"    column="single_price"    />
+        <result property="totalPrice"    column="total_price"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="payTime"    column="pay_time"    />
+        <result property="shipTime"    column="ship_time"    />
+        <result property="finishTime"    column="finish_time"    />
+        <result property="receiveInfo"    column="receive_info"    />
+        <result property="remark"    column="remark"    />
+        <result property="status"    column="status"    />
+        <result property="shopId"    column="shop_id"    />
+        <result property="shopName"    column="shop_name"    />
+        <result property="shopNameLang"    column="shop_name_lang"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="mobile"    column="mobile"    />
+        <result property="shopGoodsInfoId"    column="shop_goods_info_id"    />
+        <result property="specification"    column="specification"    />
+        <result property="payMethod"    column="pay_method"    />
+    </resultMap>
+
+    <sql id="selectShopOrderVo">
+        select a.id, order_code,shop_goods_info_id, goods_id, goods_name,goods_img,introduce,detail,specification, price platformPrice,quantity, single_price, total_price,
+               a.create_time, pay_time,ship_time, finish_time, receive_info, a.remark, a.status, shop_id,shop_name,shop_name_lang,
+               user_id,user_name,nick_name,mobile,pay_method
+        from shop_order a
+                 left join platform_goods_info b
+                           on a.goods_id = b.id
+                 left join shop_info c
+                           on a.shop_id = c.id
+                 left join user_info d
+                           on a.user_id = d.id
+    </sql>
+
+    <select id="myShopOrder" resultMap="ShopOrderResult">
+        SELECT
+            a.id,
+            order_code,
+            shop_goods_info_id,
+            goods_id,
+            goods_name,
+            goods_img,
+            introduce,
+            detail,
+            specification,
+            price platformPrice,
+            quantity,
+            single_price,
+            total_price,
+            a.create_time,
+            pay_time,
+            ship_time,
+            finish_time,
+            receive_info,
+            a.remark,
+            a.STATUS,
+            shop_id,
+            shop_name,
+            shop_name_lang,
+            user_id,
+            user_name,
+            nick_name,
+            mobile,
+            pay_method
+        FROM
+            shop_order a
+        LEFT JOIN (
+            SELECT
+                a.id,
+                IFNULL( b.goods_name, a.goods_name ) goods_name,
+                IFNULL( b.goods_img, a.goods_img ) goods_img,
+                IFNULL( b.img_list, a.img_list ) img_list,
+                price,
+                discount_price,
+                minor_class,
+                goods_inventory,
+                create_time,
+                update_time,
+                IFNULL( b.detail, a.detail ) detail,
+                IFNULL( b.introduce, a.introduce ) introduce,
+                STATUS,
+                is_del
+            FROM
+            platform_goods_info a
+            LEFT JOIN platform_goods_info_language b ON a.id = b.goods_id
+            AND b.language_id = #{languageId}
+        ) b ON a.goods_id = b.id
+        LEFT JOIN shop_info c ON a.shop_id = c.id
+        LEFT JOIN user_info d ON a.user_id = d.id
+        <where>
+            <if test="orderCode != null  and orderCode != ''"> and order_code = #{orderCode}</if>
+            <if test="goodsId != null "> and goods_id = #{goodsId}</if>
+            <if test="quantity != null "> and quantity = #{quantity}</if>
+            <if test="singlePrice != null "> and single_price = #{singlePrice}</if>
+            <if test="totalPrice != null "> and total_price = #{totalPrice}</if>
+            <if test="payTime != null "> and pay_time = #{payTime}</if>
+            <if test="shipTime != null "> and ship_time = #{shipTime}</if>
+            <if test="finishTime != null "> and finish_time = #{finishTime}</if>
+            <if test="receiveInfo != null  and receiveInfo != ''"> and receive_info = #{receiveInfo}</if>
+            <if test="status != null &amp; status != 1"> and a.status = #{status}</if>
+            <if test="status != null &amp; status == 1"> and (a.status = 1 or a.status = 5 or a.status = 6)</if>
+            <if test="shopId != null "> and shop_id = #{shopId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+        </where>
+        order by a.create_time desc
+    </select>
+
+    <select id="selectShopOrderById" resultMap="ShopOrderResult">
+        <include refid="selectShopOrderVo"/>
+        where a.id = #{id}
+    </select>
+
+    <resultMap type="ApiShipmentNumber" id="ShipmentNumberResult">
+        <result property="id"    column="id"    />
+        <result property="shipmentnumber"    column="shipmentNumber"    />
+        <result property="shopOrderId"    column="shop_order_id"    />
+    </resultMap>
+
+    <sql id="selectShipmentNumberVo">
+        select id, shipmentNumber, shop_order_id from shipment_number
+    </sql>
+
+    <select id="selectShipmentNumberByShopOrderId" parameterType="Long" resultMap="ShipmentNumberResult">
+        <include refid="selectShipmentNumberVo"/>
+        where shop_order_id = #{shopOrderId}
+    </select>
+
+</mapper>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.IndexReportMapper">
+
+    <select id="sellerQuantity" resultType="java.lang.Integer">
+        select count(1)
+        from sys_user a
+                 left join sys_user_role b
+                           on a.user_id = b.user_id
+                 left join sys_role c
+                           on b.role_id = c.role_id
+        where b.role_id = 100 and a.del_flag = 0
+    </select>
+    <select id="sellerQuantityNewRegisterToday" resultType="java.lang.Integer">
+        select count(1)
+        from sys_user a
+                 left join sys_user_role b
+                           on a.user_id = b.user_id
+                 left join sys_role c
+                           on b.role_id = c.role_id
+        where b.role_id = 100 and a.del_flag = 0
+        and to_days(a.create_time) = to_days(now())
+    </select>
+    <select id="userQuantity" resultType="java.lang.Integer">
+        select count(1) from user_info
+        where is_del = 0 and user_type = 0
+    </select>
+    <select id="userQuantityNewRegisterToday" resultType="java.lang.Integer">
+        select count(1) from user_info
+        where is_del = 0 and user_type = 0
+        and to_days(create_time) = to_days(now())
+    </select>
+    <select id="sellerWalletAmountTotal" resultType="java.math.BigDecimal">
+        select sum(amount)
+        from sys_user a
+                 left join sys_user_role b
+                           on a.user_id = b.user_id
+                 left join sys_role c
+                           on b.role_id = c.role_id
+        where b.role_id = 100 and a.del_flag = 0
+    </select>
+    <select id="userWalletAmountTotal" resultType="java.math.BigDecimal">
+        select sum(amount) from user_info
+        where is_del = 0 and user_type = 0
+    </select>
+    <select id="platformIncome" resultType="java.math.BigDecimal">
+
+    </select>
+    <select id="sellerRechargeAmount" resultType="java.math.BigDecimal">
+        select sum(order_amount) from seller_bill_details where order_class = 0
+    </select>
+    <select id="userRechargeAmount" resultType="java.math.BigDecimal">
+        select sum(order_amount) from user_bill_details where order_class = 0
+    </select>
+    <select id="shopOrderQuantity" resultType="java.lang.Integer">
+        select count(1) from shop_order
+        where status != 0
+    </select>
+    <select id="shopOrderQuantityToday" resultType="java.lang.Integer">
+        select count(1) from shop_order
+        where status != 0
+        and to_days(pay_time) = to_days(now())
+    </select>
+</mapper>

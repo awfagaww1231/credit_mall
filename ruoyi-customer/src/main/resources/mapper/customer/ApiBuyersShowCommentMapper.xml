@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.customer.mapper.ApiBuyersShowCommentMapper">
+    
+    <resultMap type="ApiBuyersShowComment" id="BuyersShowCommentResult">
+        <result property="id"    column="id"    />
+        <result property="buyersShowId"    column="buyers_show_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="commentContent"    column="comment_content"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="userName"    column="user_name"    />
+        <result property="avatar"    column="avatar"    />
+    </resultMap>
+
+    <sql id="selectBuyersShowCommentVo">
+        select a.id, buyers_show_id, user_id, comment_content, a.create_time,user_name,avatar
+        from buyers_show_comment a
+                 left join user_info b
+                           on user_id = b.id
+    </sql>
+
+    <select id="selectBuyersShowCommentList" parameterType="ApiBuyersShowComment" resultMap="BuyersShowCommentResult">
+        <include refid="selectBuyersShowCommentVo"/>
+        <where>  
+            <if test="buyersShowId != null "> and buyers_show_id = #{buyersShowId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="commentContent != null  and commentContent != ''"> and comment_content = #{commentContent}</if>
+        </where>
+    </select>
+    
+    <select id="selectBuyersShowCommentById" parameterType="Long" resultMap="BuyersShowCommentResult">
+        <include refid="selectBuyersShowCommentVo"/>
+        where a.id = #{id}
+    </select>
+        
+    <insert id="insertBuyersShowComment" parameterType="ApiBuyersShowComment" useGeneratedKeys="true" keyProperty="id">
+        insert into buyers_show_comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="buyersShowId != null">buyers_show_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="commentContent != null">comment_content,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="buyersShowId != null">#{buyersShowId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="commentContent != null">#{commentContent},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBuyersShowComment" parameterType="ApiBuyersShowComment">
+        update buyers_show_comment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="buyersShowId != null">buyers_show_id = #{buyersShowId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="commentContent != null">comment_content = #{commentContent},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBuyersShowCommentById" parameterType="Long">
+        delete from buyers_show_comment where id = #{id}
+    </delete>
+
+    <delete id="deleteBuyersShowCommentByIds" parameterType="String">
+        delete from buyers_show_comment where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

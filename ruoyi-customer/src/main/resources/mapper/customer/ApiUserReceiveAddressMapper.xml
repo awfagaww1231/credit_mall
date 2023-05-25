@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.customer.mapper.ApiUserReceiveAddressMapper">
+    
+    <resultMap type="ApiUserReceiveAddress" id="UserReceiveAddressResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="receiverName"    column="receiver_name"    />
+        <result property="receiverMobile"    column="receiver_mobile"    />
+        <result property="receiverAddress"    column="receiver_address"    />
+        <result property="receiverArea"    column="receiver_area"    />
+        <result property="isDefault"    column="is_default"    />
+    </resultMap>
+
+    <sql id="selectUserReceiveAddressVo">
+        select id, user_id, receiver_name, receiver_mobile, receiver_address, receiver_area, is_default from user_receive_address
+    </sql>
+
+    <select id="selectUserReceiveAddressList" parameterType="ApiUserReceiveAddress" resultMap="UserReceiveAddressResult">
+        <include refid="selectUserReceiveAddressVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="receiverName != null  and receiverName != ''"> and receiver_name like concat('%', #{receiverName}, '%')</if>
+            <if test="receiverMobile != null  and receiverMobile != ''"> and receiver_mobile = #{receiverMobile}</if>
+            <if test="receiverAddress != null  and receiverAddress != ''"> and receiver_address = #{receiverAddress}</if>
+            <if test="receiverArea != null  and receiverArea != ''"> and receiver_area = #{receiverArea}</if>
+            <if test="isDefault != null "> and is_default = #{isDefault}</if>
+        </where>
+        order by is_default = 0 desc
+    </select>
+    
+    <select id="selectUserReceiveAddressById" parameterType="Long" resultMap="UserReceiveAddressResult">
+        <include refid="selectUserReceiveAddressVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertUserReceiveAddress" parameterType="ApiUserReceiveAddress">
+        insert into user_receive_address
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="receiverName != null">receiver_name,</if>
+            <if test="receiverMobile != null">receiver_mobile,</if>
+            <if test="receiverAddress != null">receiver_address,</if>
+            <if test="receiverArea != null">receiver_area,</if>
+            <if test="isDefault != null">is_default,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="receiverName != null">#{receiverName},</if>
+            <if test="receiverMobile != null">#{receiverMobile},</if>
+            <if test="receiverAddress != null">#{receiverAddress},</if>
+            <if test="receiverArea != null">#{receiverArea},</if>
+            <if test="isDefault != null">#{isDefault},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserReceiveAddress" parameterType="ApiUserReceiveAddress">
+        update user_receive_address
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="receiverName != null">receiver_name = #{receiverName},</if>
+            <if test="receiverMobile != null">receiver_mobile = #{receiverMobile},</if>
+            <if test="receiverAddress != null">receiver_address = #{receiverAddress},</if>
+            <if test="receiverArea != null">receiver_area = #{receiverArea},</if>
+            <if test="isDefault != null">is_default = #{isDefault},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="clearDefaultReceiveAddress">
+        update user_receive_address set is_default = 1 where user_id = #{userId}
+    </update>
+
+    <delete id="deleteUserReceiveAddressById" parameterType="Long">
+        delete from user_receive_address where id = #{id}
+    </delete>
+
+    <delete id="deleteUserReceiveAddressByIds" parameterType="String">
+        delete from user_receive_address where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

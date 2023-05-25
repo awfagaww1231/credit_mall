@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BannerImgMapper">
+    
+    <resultMap type="BannerImg" id="BannerImgResult">
+        <result property="id"    column="id"    />
+        <result property="bannerImg"    column="banner_img"    />
+        <result property="content"    column="content"    />
+        <result property="status"    column="status"    />
+        <result property="languageId"    column="language_id"    />
+    </resultMap>
+
+    <sql id="selectBannerImgVo">
+        select id, banner_img, content, status, language_id from banner_img
+    </sql>
+
+    <select id="selectBannerImgList" parameterType="BannerImg" resultMap="BannerImgResult">
+        <include refid="selectBannerImgVo"/>
+        <where>  
+            <if test="bannerImg != null  and bannerImg != ''"> and banner_img = #{bannerImg}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="languageId != null "> and language_id = #{languageId}</if>
+        </where>
+    </select>
+    
+    <select id="selectBannerImgById" parameterType="Long" resultMap="BannerImgResult">
+        <include refid="selectBannerImgVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBannerImg" parameterType="BannerImg" useGeneratedKeys="true" keyProperty="id">
+        insert into banner_img
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bannerImg != null">banner_img,</if>
+            <if test="content != null">content,</if>
+            <if test="status != null">status,</if>
+            <if test="languageId != null">language_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bannerImg != null">#{bannerImg},</if>
+            <if test="content != null">#{content},</if>
+            <if test="status != null">#{status},</if>
+            <if test="languageId != null">#{languageId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBannerImg" parameterType="BannerImg">
+        update banner_img
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="bannerImg != null">banner_img = #{bannerImg},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="languageId != null">language_id = #{languageId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBannerImgById" parameterType="Long">
+        delete from banner_img where id = #{id}
+    </delete>
+
+    <delete id="deleteBannerImgByIds" parameterType="String">
+        delete from banner_img where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

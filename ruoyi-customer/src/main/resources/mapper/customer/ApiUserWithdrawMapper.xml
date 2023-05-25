@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.customer.mapper.ApiUserWithdrawMapper">
+
+
+    <resultMap type="ApiUserWithdraw" id="UserWithdrawResult">
+        <result property="id"    column="id"    />
+        <result property="withdrawOrder"    column="withdraw_order"    />
+        <result property="withdrawAmount"    column="withdraw_amount"    />
+        <result property="handlingFee"    column="handling_fee"    />
+        <result property="arrivalMount"    column="arrival_mount"    />
+        <result property="userId"    column="user_id"    />
+        <result property="withdrawUrl"    column="withdraw_url"    />
+        <result property="withdrawImg"    column="withdraw_img"    />
+        <result property="status"    column="status"    />
+        <result property="withdrawTime"    column="withdraw_time"    />
+        <result property="approveName"    column="approve_name"    />
+        <result property="approveTime"    column="approve_time"    />
+    </resultMap>
+
+    <sql id="selectUserWithdrawVo">
+        select id, withdraw_order, withdraw_amount, handling_fee, arrival_mount, user_id, withdraw_url, withdraw_img, status, withdraw_time, approve_name, approve_time from user_withdraw
+    </sql>
+
+    <insert id="addWithdrawOrder" parameterType="UserWithdraw" useGeneratedKeys="true" keyProperty="id">
+        insert into user_withdraw
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="withdrawOrder != null">withdraw_order,</if>
+            <if test="withdrawAmount != null">withdraw_amount,</if>
+            <if test="handlingFee != null">handling_fee,</if>
+            <if test="arrivalMount != null">arrival_mount,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="withdrawUrl != null">withdraw_url,</if>
+            <if test="withdrawImg != null">withdraw_img,</if>
+            <if test="status != null">status,</if>
+            <if test="withdrawTime != null">withdraw_time,</if>
+            <if test="approveName != null">approve_name,</if>
+            <if test="approveTime != null">approve_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="withdrawOrder != null">#{withdrawOrder},</if>
+            <if test="withdrawAmount != null">#{withdrawAmount},</if>
+            <if test="handlingFee != null">#{handlingFee},</if>
+            <if test="arrivalMount != null">#{arrivalMount},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="withdrawUrl != null">#{withdrawUrl},</if>
+            <if test="withdrawImg != null">#{withdrawImg},</if>
+            <if test="status != null">#{status},</if>
+            <if test="withdrawTime != null">#{withdrawTime},</if>
+            <if test="approveName != null">#{approveName},</if>
+            <if test="approveTime != null">#{approveTime},</if>
+        </trim>
+    </insert>
+
+    <select id="userWithdrawList" parameterType="ApiUserWithdraw" resultMap="UserWithdrawResult">
+        <include refid="selectUserWithdrawVo"/>
+        <where>
+            <if test="withdrawOrder != null  and withdrawOrder != ''"> and withdraw_order = #{withdrawOrder}</if>
+            <if test="withdrawAmount != null "> and withdraw_amount = #{withdrawAmount}</if>
+            <if test="handlingFee != null "> and handling_fee = #{handlingFee}</if>
+            <if test="arrivalMount != null "> and arrival_mount = #{arrivalMount}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="withdrawUrl != null  and withdrawUrl != ''"> and withdraw_url = #{withdrawUrl}</if>
+            <if test="withdrawImg != null  and withdrawImg != ''"> and withdraw_img = #{withdrawImg}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="withdrawTime != null "> and withdraw_time = #{withdrawTime}</if>
+            <if test="approveName != null  and approveName != ''"> and approve_name like concat('%', #{approveName}, '%')</if>
+            <if test="approveTime != null "> and approve_time = #{approveTime}</if>
+        </where>
+    </select>
+</mapper>

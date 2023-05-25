@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.customer.mapper.ApiBuyersShowTitleMapper">
+
+
+
+    <resultMap type="ApiBuyersShowTitle" id="BuyersShowTitleResult">
+        <result property="id"    column="id"    />
+        <result property="titleName"    column="title_name"    />
+        <result property="labelId"    column="label_id"    />
+        <result property="img"    column="img"    />
+    </resultMap>
+
+    <sql id="selectBuyersShowTitleVo">
+        select id, title_name, label_id,img from buyers_show_title
+    </sql>
+
+    <select id="selectBuyersShowTitleList" parameterType="ApiBuyersShowTitle" resultMap="BuyersShowTitleResult">
+        <include refid="selectBuyersShowTitleVo"/>
+        <where>
+            <if test="titleName != null  and titleName != ''"> and title_name like concat('%', #{titleName}, '%')</if>
+            <if test="labelId != null "> and label_id = #{labelId}</if>
+        </where>
+    </select>
+    
+    <select id="selectBuyersShowTitleById" parameterType="Long" resultMap="BuyersShowTitleResult">
+        <include refid="selectBuyersShowTitleVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBuyersShowTitle" parameterType="ApiBuyersShowTitle" useGeneratedKeys="true" keyProperty="id">
+        insert into buyers_show_title
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="titleName != null">title_name,</if>
+            <if test="labelId != null">label_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="titleName != null">#{titleName},</if>
+            <if test="labelId != null">#{labelId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBuyersShowTitle" parameterType="ApiBuyersShowTitle">
+        update buyers_show_title
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="titleName != null">title_name = #{titleName},</if>
+            <if test="labelId != null">label_id = #{labelId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBuyersShowTitleById" parameterType="Long">
+        delete from buyers_show_title where id = #{id}
+    </delete>
+
+    <delete id="deleteBuyersShowTitleByIds" parameterType="String">
+        delete from buyers_show_title where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

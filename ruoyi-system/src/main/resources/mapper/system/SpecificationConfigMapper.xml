@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SpecificationConfigMapper">
+    
+    <resultMap type="SpecificationConfig" id="SpecificationConfigResult">
+        <result property="id"    column="id"    />
+        <result property="specificationName"    column="specification_name"    />
+        <result property="remark"    column="remark"    />
+        <result property="specificationNameEn"    column="specification_name_en"    />
+        <result property="specificationNameTc"    column="specification_name_tc"    />
+        <result property="specificationNameDe"    column="specification_name_de"    />
+        <result property="specificationNameEs"    column="specification_name_es"    />
+        <result property="specificationNameFr"    column="specification_name_fr"    />
+        <result property="specificationNameIdn"    column="specification_name_idn"    />
+        <result property="specificationNameJp"    column="specification_name_jp"    />
+        <result property="specificationNameKo"    column="specification_name_ko"    />
+        <result property="specificationNameMy"    column="specification_name_my"    />
+        <result property="specificationNameTh"    column="specification_name_th"    />
+        <result property="specificationNameVi"    column="specification_name_vi"    />
+        <result property="specificationNamePt"    column="specification_name_pt"    />
+        <result property="specificationNameRus"    column="specification_name_rus"    />
+        <result property="specificationNameBlr"    column="specification_name_blr"    />
+        <result property="specificationNameIda"    column="specification_name_ida"    />
+        <result property="specificationNameSa"    column="specification_name_sa"    />
+        <result property="specificationNameAr"    column="specification_name_ar"    />
+        <result property="specificationNameIt"    column="specification_name_it"    />
+    </resultMap>
+
+    <sql id="selectSpecificationConfigVo">
+        select id, specification_name, remark, specification_name_en, specification_name_tc, specification_name_de, specification_name_es, specification_name_fr, specification_name_idn, specification_name_jp, specification_name_ko, specification_name_my, specification_name_th, specification_name_vi, specification_name_pt, specification_name_rus, specification_name_blr, specification_name_ida, specification_name_sa, specification_name_ar, specification_name_it from specification_config
+    </sql>
+
+    <select id="selectSpecificationConfigList" parameterType="SpecificationConfig" resultMap="SpecificationConfigResult">
+        <include refid="selectSpecificationConfigVo"/>
+        <where>  
+            <if test="specificationName != null  and specificationName != ''"> and specification_name like concat('%', #{specificationName}, '%')</if>
+            <if test="specificationNameEn != null  and specificationNameEn != ''"> and specification_name_en = #{specificationNameEn}</if>
+            <if test="specificationNameTc != null  and specificationNameTc != ''"> and specification_name_tc = #{specificationNameTc}</if>
+            <if test="specificationNameDe != null  and specificationNameDe != ''"> and specification_name_de = #{specificationNameDe}</if>
+            <if test="specificationNameEs != null  and specificationNameEs != ''"> and specification_name_es = #{specificationNameEs}</if>
+            <if test="specificationNameFr != null  and specificationNameFr != ''"> and specification_name_fr = #{specificationNameFr}</if>
+            <if test="specificationNameIdn != null  and specificationNameIdn != ''"> and specification_name_idn = #{specificationNameIdn}</if>
+            <if test="specificationNameJp != null  and specificationNameJp != ''"> and specification_name_jp = #{specificationNameJp}</if>
+            <if test="specificationNameKo != null  and specificationNameKo != ''"> and specification_name_ko = #{specificationNameKo}</if>
+            <if test="specificationNameMy != null  and specificationNameMy != ''"> and specification_name_my = #{specificationNameMy}</if>
+            <if test="specificationNameTh != null  and specificationNameTh != ''"> and specification_name_th = #{specificationNameTh}</if>
+            <if test="specificationNameVi != null  and specificationNameVi != ''"> and specification_name_vi = #{specificationNameVi}</if>
+            <if test="specificationNamePt != null  and specificationNamePt != ''"> and specification_name_pt = #{specificationNamePt}</if>
+            <if test="specificationNameRus != null  and specificationNameRus != ''"> and specification_name_rus = #{specificationNameRus}</if>
+            <if test="specificationNameBlr != null  and specificationNameBlr != ''"> and specification_name_blr = #{specificationNameBlr}</if>
+            <if test="specificationNameIda != null  and specificationNameIda != ''"> and specification_name_ida = #{specificationNameIda}</if>
+            <if test="specificationNameSa != null  and specificationNameSa != ''"> and specification_name_sa = #{specificationNameSa}</if>
+            <if test="specificationNameAr != null  and specificationNameAr != ''"> and specification_name_ar = #{specificationNameAr}</if>
+            <if test="specificationNameIt != null  and specificationNameIt != ''"> and specification_name_it = #{specificationNameIt}</if>
+        </where>
+    </select>
+    
+    <select id="selectSpecificationConfigById" parameterType="Long" resultMap="SpecificationConfigResult">
+        <include refid="selectSpecificationConfigVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSpecificationConfig" parameterType="SpecificationConfig" useGeneratedKeys="true" keyProperty="id">
+        insert into specification_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="specificationName != null">specification_name,</if>
+            <if test="remark != null">remark,</if>
+            <if test="specificationNameEn != null">specification_name_en,</if>
+            <if test="specificationNameTc != null">specification_name_tc,</if>
+            <if test="specificationNameDe != null">specification_name_de,</if>
+            <if test="specificationNameEs != null">specification_name_es,</if>
+            <if test="specificationNameFr != null">specification_name_fr,</if>
+            <if test="specificationNameIdn != null">specification_name_idn,</if>
+            <if test="specificationNameJp != null">specification_name_jp,</if>
+            <if test="specificationNameKo != null">specification_name_ko,</if>
+            <if test="specificationNameMy != null">specification_name_my,</if>
+            <if test="specificationNameTh != null">specification_name_th,</if>
+            <if test="specificationNameVi != null">specification_name_vi,</if>
+            <if test="specificationNamePt != null">specification_name_pt,</if>
+            <if test="specificationNameRus != null">specification_name_rus,</if>
+            <if test="specificationNameBlr != null">specification_name_blr,</if>
+            <if test="specificationNameIda != null">specification_name_ida,</if>
+            <if test="specificationNameSa != null">specification_name_sa,</if>
+            <if test="specificationNameAr != null">specification_name_ar,</if>
+            <if test="specificationNameIt != null">specification_name_it,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="specificationName != null">#{specificationName},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="specificationNameEn != null">#{specificationNameEn},</if>
+            <if test="specificationNameTc != null">#{specificationNameTc},</if>
+            <if test="specificationNameDe != null">#{specificationNameDe},</if>
+            <if test="specificationNameEs != null">#{specificationNameEs},</if>
+            <if test="specificationNameFr != null">#{specificationNameFr},</if>
+            <if test="specificationNameIdn != null">#{specificationNameIdn},</if>
+            <if test="specificationNameJp != null">#{specificationNameJp},</if>
+            <if test="specificationNameKo != null">#{specificationNameKo},</if>
+            <if test="specificationNameMy != null">#{specificationNameMy},</if>
+            <if test="specificationNameTh != null">#{specificationNameTh},</if>
+            <if test="specificationNameVi != null">#{specificationNameVi},</if>
+            <if test="specificationNamePt != null">#{specificationNamePt},</if>
+            <if test="specificationNameRus != null">#{specificationNameRus},</if>
+            <if test="specificationNameBlr != null">#{specificationNameBlr},</if>
+            <if test="specificationNameIda != null">#{specificationNameIda},</if>
+            <if test="specificationNameSa != null">#{specificationNameSa},</if>
+            <if test="specificationNameAr != null">#{specificationNameAr},</if>
+            <if test="specificationNameIt != null">#{specificationNameIt},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSpecificationConfig" parameterType="SpecificationConfig">
+        update specification_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="specificationName != null">specification_name = #{specificationName},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="specificationNameEn != null">specification_name_en = #{specificationNameEn},</if>
+            <if test="specificationNameTc != null">specification_name_tc = #{specificationNameTc},</if>
+            <if test="specificationNameDe != null">specification_name_de = #{specificationNameDe},</if>
+            <if test="specificationNameEs != null">specification_name_es = #{specificationNameEs},</if>
+            <if test="specificationNameFr != null">specification_name_fr = #{specificationNameFr},</if>
+            <if test="specificationNameIdn != null">specification_name_idn = #{specificationNameIdn},</if>
+            <if test="specificationNameJp != null">specification_name_jp = #{specificationNameJp},</if>
+            <if test="specificationNameKo != null">specification_name_ko = #{specificationNameKo},</if>
+            <if test="specificationNameMy != null">specification_name_my = #{specificationNameMy},</if>
+            <if test="specificationNameTh != null">specification_name_th = #{specificationNameTh},</if>
+            <if test="specificationNameVi != null">specification_name_vi = #{specificationNameVi},</if>
+            <if test="specificationNamePt != null">specification_name_pt = #{specificationNamePt},</if>
+            <if test="specificationNameRus != null">specification_name_rus = #{specificationNameRus},</if>
+            <if test="specificationNameBlr != null">specification_name_blr = #{specificationNameBlr},</if>
+            <if test="specificationNameIda != null">specification_name_ida = #{specificationNameIda},</if>
+            <if test="specificationNameSa != null">specification_name_sa = #{specificationNameSa},</if>
+            <if test="specificationNameAr != null">specification_name_ar = #{specificationNameAr},</if>
+            <if test="specificationNameIt != null">specification_name_it = #{specificationNameIt},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSpecificationConfigById" parameterType="Long">
+        delete from specification_config where id = #{id}
+    </delete>
+
+    <delete id="deleteSpecificationConfigByIds" parameterType="String">
+        delete from specification_config where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

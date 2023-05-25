@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.customer.mapper.ApiUserRechargeOrderMapper">
+
+    <resultMap type="ApiUserRechargeOrder" id="UserRechargeOrderResult">
+        <result property="id"    column="id"    />
+        <result property="orderCode"    column="order_code"    />
+        <result property="rechargeUrl"    column="recharge_url"    />
+        <result property="amount"    column="amount"    />
+        <result property="remark"    column="remark"    />
+        <result property="imgUrl"    column="img_url"    />
+        <result property="userId"    column="user_id"    />
+        <result property="orderStatus"    column="order_status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="approveName"    column="approve_name"    />
+        <result property="approveTime"    column="approve_time"    />
+        <result property="rechargeImg"    column="recharge_img"    />
+        <result property="rechargeMethod"    column="recharge_method"    />
+    </resultMap>
+
+    <sql id="selectUserRechargeOrderVo">
+        select id, order_code, recharge_url, amount, remark, img_url, user_id, order_status, create_time, approve_name, approve_time, recharge_img, recharge_method from user_recharge_order
+    </sql>
+
+    <select id="selectUserRechargeOrderList" parameterType="ApiUserRechargeOrder" resultMap="UserRechargeOrderResult">
+        <include refid="selectUserRechargeOrderVo"/>
+        <where>
+            <if test="orderCode != null  and orderCode != ''"> and order_code = #{orderCode}</if>
+            <if test="rechargeUrl != null  and rechargeUrl != ''"> and recharge_url = #{rechargeUrl}</if>
+            <if test="amount != null "> and amount = #{amount}</if>
+            <if test="imgUrl != null  and imgUrl != ''"> and img_url = #{imgUrl}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="orderStatus != null "> and order_status = #{orderStatus}</if>
+            <if test="approveName != null  and approveName != ''"> and approve_name like concat('%', #{approveName}, '%')</if>
+            <if test="approveTime != null "> and approve_time = #{approveTime}</if>
+            <if test="rechargeImg != null  and rechargeImg != ''"> and recharge_img = #{rechargeImg}</if>
+            <if test="rechargeMethod != null "> and recharge_method = #{rechargeMethod}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectUserRechargeOrderById" parameterType="Long" resultMap="UserRechargeOrderResult">
+        <include refid="selectUserRechargeOrderVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertUserRechargeOrder" parameterType="ApiUserRechargeOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into user_recharge_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderCode != null">order_code,</if>
+            <if test="rechargeUrl != null">recharge_url,</if>
+            <if test="amount != null">amount,</if>
+            <if test="remark != null">remark,</if>
+            <if test="imgUrl != null">img_url,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="orderStatus != null">order_status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="approveName != null">approve_name,</if>
+            <if test="approveTime != null">approve_time,</if>
+            <if test="rechargeImg != null">recharge_img,</if>
+            <if test="rechargeMethod != null">recharge_method,</if>
+            <if test="payType != null">pay_type,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderCode != null">#{orderCode},</if>
+            <if test="rechargeUrl != null">#{rechargeUrl},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="imgUrl != null">#{imgUrl},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="orderStatus != null">#{orderStatus},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="approveName != null">#{approveName},</if>
+            <if test="approveTime != null">#{approveTime},</if>
+            <if test="rechargeImg != null">#{rechargeImg},</if>
+            <if test="rechargeMethod != null">#{rechargeMethod},</if>
+            <if test="payType != null">#{payType},</if>
+        </trim>
+    </insert>
+
+    <update id="updateUserRechargeOrder" parameterType="ApiUserRechargeOrder">
+        update user_recharge_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderCode != null">order_code = #{orderCode},</if>
+            <if test="rechargeUrl != null">recharge_url = #{rechargeUrl},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="imgUrl != null">img_url = #{imgUrl},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="orderStatus != null">order_status = #{orderStatus},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="approveName != null">approve_name = #{approveName},</if>
+            <if test="approveTime != null">approve_time = #{approveTime},</if>
+            <if test="rechargeImg != null">recharge_img = #{rechargeImg},</if>
+            <if test="rechargeMethod != null">recharge_method = #{rechargeMethod},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserRechargeOrderById" parameterType="Long">
+        delete from user_recharge_order where id = #{id}
+    </delete>
+</mapper>

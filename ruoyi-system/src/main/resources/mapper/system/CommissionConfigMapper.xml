@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CommissionConfigMapper">
+    
+    <resultMap type="CommissionConfig" id="CommissionConfigResult">
+        <result property="id"    column="id"    />
+        <result property="commissionName"    column="commission_name"    />
+        <result property="commissionProfit"    column="commission_profit"    />
+        <result property="type"    column="type"    />
+        <result property="commissionLevel"    column="commission_level"    />
+    </resultMap>
+
+    <sql id="selectCommissionConfigVo">
+        select id, commission_name, commission_profit, type, commission_level from commission_config
+    </sql>
+
+    <select id="selectCommissionConfigList" parameterType="CommissionConfig" resultMap="CommissionConfigResult">
+        <include refid="selectCommissionConfigVo"/>
+        <where>  
+            <if test="commissionName != null  and commissionName != ''"> and commission_name like concat('%', #{commissionName}, '%')</if>
+            <if test="commissionProfit != null "> and commission_profit = #{commissionProfit}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="commissionLevel != null "> and commission_level = #{commissionLevel}</if>
+        </where>
+    </select>
+    
+    <select id="selectCommissionConfigById" parameterType="Long" resultMap="CommissionConfigResult">
+        <include refid="selectCommissionConfigVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectCommissionConfigByLevelAndType" resultMap="CommissionConfigResult">
+        <include refid="selectCommissionConfigVo"/>
+        where commission_level = #{level} and type = #{type}
+    </select>
+
+    <insert id="insertCommissionConfig" parameterType="CommissionConfig" useGeneratedKeys="true" keyProperty="id">
+        insert into commission_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="commissionName != null">commission_name,</if>
+            <if test="commissionProfit != null">commission_profit,</if>
+            <if test="type != null">type,</if>
+            <if test="commissionLevel != null">commission_level,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="commissionName != null">#{commissionName},</if>
+            <if test="commissionProfit != null">#{commissionProfit},</if>
+            <if test="type != null">#{type},</if>
+            <if test="commissionLevel != null">#{commissionLevel},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCommissionConfig" parameterType="CommissionConfig">
+        update commission_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="commissionName != null">commission_name = #{commissionName},</if>
+            <if test="commissionProfit != null">commission_profit = #{commissionProfit},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="commissionLevel != null">commission_level = #{commissionLevel},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCommissionConfigById" parameterType="Long">
+        delete from commission_config where id = #{id}
+    </delete>
+
+    <delete id="deleteCommissionConfigByIds" parameterType="String">
+        delete from commission_config where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

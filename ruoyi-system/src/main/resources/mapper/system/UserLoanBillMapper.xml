@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.UserLoanBillMapper">
+    
+    <resultMap type="UserLoanBill" id="UserLoanBillResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="repaymentTotalAmountEveryPeriod"    column="repayment_total_amount_every_period"    />
+        <result property="repaidAmountThisPeriod"    column="repaid_amount_this_period"    />
+        <result property="repaymentStatus"    column="repayment_status"    />
+        <result property="userLoanRecordId"    column="user_loan_record_id"    />
+        <result property="billTime"    column="bill_time"    />
+        <result property="version"    column="version"    />
+    </resultMap>
+
+    <sql id="selectUserLoanBillVo">
+        select a.id, a.user_id, a.repayment_total_amount_every_period, a.repaid_amount_this_period,
+               a.repayment_status, a.user_loan_record_id, a.bill_time,a.version
+        from user_loan_bill a
+            left join user_info b on a.user_id = b.id
+            left join sys_user su on su.user_id = b.sup_id
+    </sql>
+
+    <select id="selectUserLoanBillList" parameterType="UserLoanBill" resultMap="UserLoanBillResult">
+        <include refid="selectUserLoanBillVo"/>
+        <where>  
+            <if test="userId != null "> and a.user_id = #{userId}</if>
+            <if test="repaymentTotalAmountEveryPeriod != null "> and a.repayment_total_amount_every_period = #{repaymentTotalAmountEveryPeriod}</if>
+            <if test="repaidAmountThisPeriod != null "> and a.repaid_amount_this_period = #{repaidAmountThisPeriod}</if>
+            <if test="repaymentStatus != null "> and a.repayment_status = #{repaymentStatus}</if>
+            <if test="userLoanRecordId != null "> and a.user_loan_record_id = #{userLoanRecordId}</if>
+            <if test="billTime != null"><![CDATA[   and DATE_FORMAT(a.bill_time, '%Y-%m-%d') = DATE_FORMAT(#{billTime}, '%Y-%m-%d')   ]]></if>
+            ${params.dataScope}
+        </where>
+    </select>
+    
+    <select id="selectUserLoanBillById" parameterType="Long" resultMap="UserLoanBillResult">
+        <include refid="selectUserLoanBillVo"/>
+        where a.id = #{id}
+    </select>
+        
+    <insert id="insertUserLoanBill" parameterType="UserLoanBill" useGeneratedKeys="true" keyProperty="id">
+        insert into user_loan_bill
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="repaymentTotalAmountEveryPeriod != null">repayment_total_amount_every_period,</if>
+            <if test="repaidAmountThisPeriod != null">repaid_amount_this_period,</if>
+            <if test="repaymentStatus != null">repayment_status,</if>
+            <if test="userLoanRecordId != null">user_loan_record_id,</if>
+            <if test="billTime != null">bill_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="repaymentTotalAmountEveryPeriod != null">#{repaymentTotalAmountEveryPeriod},</if>
+            <if test="repaidAmountThisPeriod != null">#{repaidAmountThisPeriod},</if>
+            <if test="repaymentStatus != null">#{repaymentStatus},</if>
+            <if test="userLoanRecordId != null">#{userLoanRecordId},</if>
+            <if test="billTime != null">#{billTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserLoanBill" parameterType="UserLoanBill">
+        update user_loan_bill
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="repaymentTotalAmountEveryPeriod != null">repayment_total_amount_every_period = #{repaymentTotalAmountEveryPeriod},</if>
+            <if test="repaidAmountThisPeriod != null">repaid_amount_this_period = #{repaidAmountThisPeriod},</if>
+            <if test="repaymentStatus != null">repayment_status = #{repaymentStatus},</if>
+            <if test="userLoanRecordId != null">user_loan_record_id = #{userLoanRecordId},</if>
+            <if test="billTime != null">bill_time = #{billTime},</if>
+            <if test="version != null">version = version+1,</if>
+        </trim>
+        where id = #{id}
+        <if test="version != null">
+            and version = #{version}
+        </if>
+    </update>
+
+    <delete id="deleteUserLoanBillById" parameterType="Long">
+        delete from user_loan_bill where id = #{id}
+    </delete>
+
+    <delete id="deleteUserLoanBillByIds" parameterType="String">
+        delete from user_loan_bill where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

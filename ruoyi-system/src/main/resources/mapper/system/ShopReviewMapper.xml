@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ShopReviewMapper">
+    
+    <resultMap type="ShopReview" id="ShopReviewResult">
+        <result property="id"    column="id"    />
+        <result property="shopName"    column="shop_name"    />
+        <result property="shopLogo"    column="shop_logo"    />
+        <result property="shopTel"    column="shop_tel"    />
+        <result property="shopAddress"    column="shop_address"    />
+        <result property="receiveAddress"    column="receive_address"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="status"    column="status"    />
+        <result property="shopOwnerId"    column="shop_owner_id"    />
+        <result property="ownerUserName"    column="owner_user_name"    />
+        <result property="ownerNickName"    column="owner_nick_name"    />
+        <result property="ownerEmail"    column="owner_email"    />
+        <result property="ownerTel"    column="owner_tel"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectShopReviewVo">
+        select a.id id, shop_name, shop_logo, shop_tel, shop_address, receive_address, a.create_time create_time, a.update_time update_time, a.status status,
+               shop_owner_id,user_name owner_user_name,nick_name owner_nick_name,email owner_email, phonenumber owner_tel
+        from shop_review a
+        left join sys_user b
+        on shop_owner_id = b.user_id
+    </sql>
+
+    <select id="selectShopReviewList" parameterType="ShopReview" resultMap="ShopReviewResult">
+        <include refid="selectShopReviewVo"/>
+        <where>  
+            <if test="shopName != null  and shopName != ''"> and shop_name like concat('%', #{shopName}, '%')</if>
+            <if test="shopLogo != null  and shopLogo != ''"> and shop_logo = #{shopLogo}</if>
+            <if test="shopTel != null  and shopTel != ''"> and shop_tel like concat('%', #{shopTel}, '%')</if>
+            <if test="shopAddress != null  and shopAddress != ''"> and shop_address = #{shopAddress}</if>
+            <if test="receiveAddress != null  and receiveAddress != ''"> and receive_address = #{receiveAddress}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="shopOwnerId != null "> and shop_owner_id = #{shopOwnerId}</if>
+            <if test="ownerUserName != null  and ownerUserName != ''"> and user_name like concat('%', #{ownerUserName}, '%')</if>
+            <if test="ownerNickName != null  and ownerNickName != ''"> and nick_name like concat('%', #{ownerNickName}, '%')</if>
+            <if test="ownerEmail != null  and ownerEmail != ''"> and email = #{ownerEmail}</if>
+            <if test="ownerTel != null  and ownerTel != ''"> and phonenumber like concat('%', #{ownerTel}, '%')</if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+        order by a.status = 0 desc
+    </select>
+    
+    <select id="selectShopReviewById" parameterType="Long" resultMap="ShopReviewResult">
+        <include refid="selectShopReviewVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertShopReview" parameterType="ShopReview" useGeneratedKeys="true" keyProperty="id">
+        insert into shop_review
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="shopName != null">shop_name,</if>
+            <if test="shopLogo != null">shop_logo,</if>
+            <if test="shopTel != null">shop_tel,</if>
+            <if test="shopAddress != null">shop_address,</if>
+            <if test="receiveAddress != null">receive_address,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="status != null">status,</if>
+            <if test="shopOwnerId != null">shop_owner_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="shopName != null">#{shopName},</if>
+            <if test="shopLogo != null">#{shopLogo},</if>
+            <if test="shopTel != null">#{shopTel},</if>
+            <if test="shopAddress != null">#{shopAddress},</if>
+            <if test="receiveAddress != null">#{receiveAddress},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="shopOwnerId != null">#{shopOwnerId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateShopReview" parameterType="ShopReview">
+        update shop_review
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="shopName != null">shop_name = #{shopName},</if>
+            <if test="shopLogo != null">shop_logo = #{shopLogo},</if>
+            <if test="shopTel != null">shop_tel = #{shopTel},</if>
+            <if test="shopAddress != null">shop_address = #{shopAddress},</if>
+            <if test="receiveAddress != null">receive_address = #{receiveAddress},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="shopOwnerId != null">shop_owner_id = #{shopOwnerId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteShopReviewById" parameterType="Long">
+        delete from shop_review where id = #{id}
+    </delete>
+
+    <delete id="deleteShopReviewByIds" parameterType="String">
+        delete from shop_review where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.customer.mapper.ApiAuthMapper">
+
+    <resultMap type="ApiUserInfo" id="UserInfoResult">
+        <result property="id"    column="id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="mobile"    column="mobile"    />
+        <result property="password"    column="password"    />
+        <result property="payPassword"    column="pay_password"    />
+        <result property="avatar"    column="avatar"    />
+        <result property="email"    column="email"    />
+        <result property="gender"    column="gender"    />
+        <result property="registerTime"    column="register_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createUser"    column="create_user"    />
+        <result property="status"    column="status"    />
+        <result property="amount"    column="amount"    />
+        <result property="remark"    column="remark"    />
+        <result property="isDel"    column="is_del"    />
+        <result property="userType"    column="user_type"    />
+        <result property="idNumber"    column="id_number"    />
+        <result property="realName"    column="real_name"    />
+        <result property="idCardImg1"    column="id_card_img1"    />
+        <result property="idCardImg2"    column="id_card_img2"    />
+        <result property="idCardImg3"    column="id_card_img3"    />
+        <result property="realNameAuthStatus"    column="real_name_auth_status"    />
+        <result property="creditCardNumber"    column="credit_card_number"    />
+        <result property="creditCardSecurityCode"    column="credit_card_security_code"    />
+        <result property="creditCardTotalAmount"    column="credit_card_total_amount"    />
+        <result property="creditCardUsedAmount"    column="credit_card_used_amount"    />
+        <result property="vipLevel"    column="vip_level"    />
+        <result property="creditCardStatus"    column="credit_card_status"    />
+        <result property="creditCardEnableStatus"    column="credit_card_enable_status"    />
+        <result property="supId"    column="sup_id"    />
+        <result property="inviteCode"    column="invite_code"    />
+    </resultMap>
+
+    <sql id="selectUserInfoVo">
+        select id, user_name, nick_name, mobile, password, pay_password, avatar,
+               email, gender, register_time, create_time, create_user, status,
+               amount, remark, is_del, user_type ,id_number,real_name,id_card_img1,
+               id_card_img2,id_card_img3,real_name_auth_status,credit_card_number,
+               credit_card_security_code,credit_card_total_amount,credit_card_used_amount,
+               vip_level,credit_card_status,credit_card_enable_status,sup_id,invite_code
+        from user_info
+    </sql>
+
+
+    <insert id="insertUser" parameterType="ApiUserInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into user_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userName != null">user_name,</if>
+            <if test="nickName != null">nick_name,</if>
+            <if test="mobile != null">mobile,</if>
+            <if test="password != null">password,</if>
+            <if test="payPassword != null">pay_password,</if>
+            <if test="avatar != null">avatar,</if>
+            <if test="email != null">email,</if>
+            <if test="gender != null">gender,</if>
+            <if test="registerTime != null">register_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createUser != null">create_user,</if>
+            <if test="status != null">status,</if>
+            <if test="amount != null">amount,</if>
+            <if test="remark != null">remark,</if>
+            <if test="isDel != null">is_del,</if>
+            <if test="userType != null">user_type,</if>
+            <if test="supId != null">sup_id,</if>
+            <if test="inviteCode != null">invite_code,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userName != null">#{userName},</if>
+            <if test="nickName != null">#{nickName},</if>
+            <if test="mobile != null">#{mobile},</if>
+            <if test="password != null">#{password},</if>
+            <if test="payPassword != null">#{payPassword},</if>
+            <if test="avatar != null">#{avatar},</if>
+            <if test="email != null">#{email},</if>
+            <if test="gender != null">#{gender},</if>
+            <if test="registerTime != null">#{registerTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createUser != null">#{createUser},</if>
+            <if test="status != null">#{status},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="isDel != null">#{isDel},</if>
+            <if test="userType != null">#{userType},</if>
+            <if test="supId != null">#{supId},</if>
+            <if test="inviteCode != null">#{inviteCode},</if>
+        </trim>
+    </insert>
+
+    <update id="updateUserInfo" parameterType="ApiUserInfo">
+        update user_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="mobile != null">mobile = #{mobile},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="payPassword != null">pay_password = #{payPassword},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="registerTime != null">register_time = #{registerTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createUser != null">create_user = #{createUser},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="isDel != null">is_del = #{isDel},</if>
+            <if test="userType != null">user_type = #{userType},</if>
+            <if test="idNumber != null">id_number = #{idNumber},</if>
+            <if test="realName != null">real_name = #{realName},</if>
+            <if test="realNameAuthStatus != null">real_name_auth_status = #{realNameAuthStatus},</if>
+            <if test="idCardImg1 != null">id_card_img1 = #{idCardImg1},</if>
+            <if test="idCardImg2 != null">id_card_img2 = #{idCardImg2},</if>
+            <if test="idCardImg3 != null">id_card_img3 = #{idCardImg3},</if>
+            <if test="creditCardNumber != null">credit_card_number = #{creditCardNumber},</if>
+            <if test="creditCardSecurityCode != null">credit_card_security_code = #{creditCardSecurityCode},</if>
+            <if test="creditCardStatus != null">credit_card_status = #{creditCardStatus},</if>
+            <if test="creditCardTotalAmount != null">credit_card_total_amount = #{creditCardTotalAmount},</if>
+            <if test="creditCardUsedAmount != null">credit_card_used_amount = #{creditCardUsedAmount},</if>
+            <if test="supId != null">sup_id = #{supId},</if>
+            <if test="inviteCode != null">invite_code = #{inviteCode},</if>
+        </trim>
+        where id = #{id}
+        <if test="creditCardUsedAmountBefore != null">
+            and credit_card_used_amount = #{creditCardUsedAmountBefore}
+        </if>
+    </update>
+
+    <update id="updateUserAmount">
+        update user_info
+        set amount = #{amount}
+        where id = #{id}
+        and amount = #{amountBefore}
+    </update>
+
+    <select id="selectUserByMobile" resultMap="UserInfoResult">
+        <include refid="selectUserInfoVo"/>
+        where mobile = #{mobile}
+    </select>
+
+    <select id="selectUserByEmail" resultMap="UserInfoResult">
+        <include refid="selectUserInfoVo"/>
+        where email = #{email}
+    </select>
+
+    <select id="selectUserById" resultMap="UserInfoResult">
+        <include refid="selectUserInfoVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectUserByInviteCode" resultMap="UserInfoResult">
+        <include refid="selectUserInfoVo"/>
+        where invite_code = #{inviteCode}
+    </select>
+    <select id="queryMyTeam" resultType="java.lang.Long">
+        select
+        id
+        from user_info
+        where is_del = 0 and sup_id in
+        <foreach item="id" index="index" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+</mapper>

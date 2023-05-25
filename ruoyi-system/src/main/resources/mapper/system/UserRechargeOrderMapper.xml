@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.UserRechargeOrderMapper">
+    
+    <resultMap type="UserRechargeOrder" id="UserRechargeOrderResult">
+        <result property="id"    column="id"    />
+        <result property="orderCode"    column="order_code"    />
+        <result property="rechargeUrl"    column="recharge_url"    />
+        <result property="amount"    column="amount"    />
+        <result property="remark"    column="remark"    />
+        <result property="imgUrl"    column="img_url"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="mobile"    column="mobile"    />
+        <result property="orderStatus"    column="order_status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="approveName"    column="approve_name"    />
+        <result property="approveTime"    column="approve_time"    />
+        <result property="rechargeImg"    column="recharge_img"    />
+        <result property="rechargeMethod"    column="recharge_method"    />
+    </resultMap>
+
+    <sql id="selectUserRechargeOrderVo">
+        select a.id, order_code, recharge_url, a.amount, a.remark, img_url, a.user_id, b.user_name , b.mobile,
+               order_status, a.create_time,approve_name, approve_time, recharge_img, recharge_method
+        from user_recharge_order a
+                 left join user_info b on a.user_id = b.id
+                left join sys_user su on su.user_id = b.sup_id
+    </sql>
+
+    <select id="selectUserRechargeOrderList" parameterType="UserRechargeOrder" resultMap="UserRechargeOrderResult">
+        <include refid="selectUserRechargeOrderVo"/>
+        <where>  
+            <if test="orderCode != null  and orderCode != ''"> and a.order_code = #{orderCode}</if>
+            <if test="rechargeUrl != null  and rechargeUrl != ''"> and a.recharge_url = #{rechargeUrl}</if>
+            <if test="imgUrl != null  and imgUrl != ''"> and a.img_url = #{imgUrl}</if>
+            <if test="userId != null "> and a.user_id = #{userId}</if>
+            <if test="orderStatus != null "> and a.order_status = #{orderStatus}</if>
+            <if test="approveName != null  and approveName != ''"> and a.approve_name like concat('%', #{approveName}, '%')</if>
+            <if test="approveTime != null "> and a.approve_time = #{approveTime}</if>
+            <if test="rechargeImg != null  and rechargeImg != ''"> and a.recharge_img = #{rechargeImg}</if>
+            <if test="rechargeMethod != null "> and a.recharge_method = #{rechargeMethod}</if>
+            ${params.dataScope}
+        </where>
+        order by a.order_status = 1 desc,id desc
+    </select>
+    
+    <select id="selectUserRechargeOrderById" parameterType="Long" resultMap="UserRechargeOrderResult">
+        <include refid="selectUserRechargeOrderVo"/>
+        where a.id = #{id}
+    </select>
+        
+    <insert id="insertUserRechargeOrder" parameterType="UserRechargeOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into user_recharge_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderCode != null">order_code,</if>
+            <if test="rechargeUrl != null">recharge_url,</if>
+            <if test="amount != null">amount,</if>
+            <if test="remark != null">remark,</if>
+            <if test="imgUrl != null">img_url,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="orderStatus != null">order_status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="approveName != null">approve_name,</if>
+            <if test="approveTime != null">approve_time,</if>
+            <if test="rechargeImg != null">recharge_img,</if>
+            <if test="rechargeMethod != null">recharge_method,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderCode != null">#{orderCode},</if>
+            <if test="rechargeUrl != null">#{rechargeUrl},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="imgUrl != null">#{imgUrl},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="orderStatus != null">#{orderStatus},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="approveName != null">#{approveName},</if>
+            <if test="approveTime != null">#{approveTime},</if>
+            <if test="rechargeImg != null">#{rechargeImg},</if>
+            <if test="rechargeMethod != null">#{rechargeMethod},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserRechargeOrder" parameterType="UserRechargeOrder">
+        update user_recharge_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderCode != null">order_code = #{orderCode},</if>
+            <if test="rechargeUrl != null">recharge_url = #{rechargeUrl},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="imgUrl != null">img_url = #{imgUrl},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="orderStatus != null">order_status = #{orderStatus},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="approveName != null">approve_name = #{approveName},</if>
+            <if test="approveTime != null">approve_time = #{approveTime},</if>
+            <if test="rechargeImg != null">recharge_img = #{rechargeImg},</if>
+            <if test="rechargeMethod != null">recharge_method = #{rechargeMethod},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserRechargeOrderById" parameterType="Long">
+        delete from user_recharge_order where id = #{id}
+    </delete>
+
+    <delete id="deleteUserRechargeOrderByIds" parameterType="String">
+        delete from user_recharge_order where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

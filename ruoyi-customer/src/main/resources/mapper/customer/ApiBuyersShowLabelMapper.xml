@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.customer.mapper.ApiBuyersShowLabelMapper">
+    
+    <resultMap type="ApiBuyersShowLabel" id="BuyersShowLabelResult">
+        <result property="id"    column="id"    />
+        <result property="labelName"    column="label_name"    />
+    </resultMap>
+
+    <sql id="selectBuyersShowLabelVo">
+        select id, label_name from buyers_show_label
+    </sql>
+
+    <select id="selectBuyersShowLabelList" parameterType="ApiBuyersShowLabel" resultMap="BuyersShowLabelResult">
+        <include refid="selectBuyersShowLabelVo"/>
+        <where>  
+            <if test="labelName != null  and labelName != ''"> and label_name like concat('%', #{labelName}, '%')</if>
+        </where>
+    </select>
+
+    <select id="randLabelList" parameterType="ApiBuyersShowLabel" resultMap="BuyersShowLabelResult">
+        select count(1) count,b.id, label_name
+        from buyer_show_label_bind a
+            left join buyers_show_label b
+        on b.id = label_id
+        group by label_id
+        order by count
+    </select>
+    
+    <select id="selectBuyersShowLabelById" parameterType="Long" resultMap="BuyersShowLabelResult">
+        <include refid="selectBuyersShowLabelVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectPostsNumberByLabelId" resultType="java.lang.Integer">
+        select count(1) from buyer_show_label_bind where label_id = #{labelId}
+    </select>
+
+    <insert id="insertBuyersShowLabel" parameterType="ApiBuyersShowLabel" useGeneratedKeys="true" keyProperty="id">
+        insert into buyers_show_label
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="labelName != null">label_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="labelName != null">#{labelName},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBuyersShowLabel" parameterType="ApiBuyersShowLabel">
+        update buyers_show_label
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="labelName != null">label_name = #{labelName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBuyersShowLabelById" parameterType="Long">
+        delete from buyers_show_label where id = #{id}
+    </delete>
+
+    <delete id="deleteBuyersShowLabelByIds" parameterType="String">
+        delete from buyers_show_label where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

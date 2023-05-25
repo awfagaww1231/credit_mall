@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.UserInfoMapper">
+    
+    <resultMap type="UserInfo" id="UserInfoResult">
+        <result property="id"    column="id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="mobile"    column="mobile"    />
+        <result property="password"    column="password"    />
+        <result property="payPassword"    column="pay_password"    />
+        <result property="avatar"    column="avatar"    />
+        <result property="email"    column="email"    />
+        <result property="gender"    column="gender"    />
+        <result property="registerTime"    column="register_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createUser"    column="create_user"    />
+        <result property="status"    column="status"    />
+        <result property="amount"    column="amount"    />
+        <result property="remark"    column="remark"    />
+        <result property="isDel"    column="is_del"    />
+        <result property="userType"    column="user_type"    />
+        <result property="idNumber"    column="id_number"    />
+        <result property="realName"    column="real_name"    />
+        <result property="idCardImg1"    column="id_card_img1"    />
+        <result property="idCardImg2"    column="id_card_img2"    />
+        <result property="idCardImg3"    column="id_card_img3"    />
+        <result property="realNameAuthStatus"    column="real_name_auth_status"    />
+        <result property="creditCardNumber"    column="credit_card_number"    />
+        <result property="creditCardSecurityCode"    column="credit_card_security_code"    />
+        <result property="creditCardTotalAmount"    column="credit_card_total_amount"    />
+        <result property="creditCardUsedAmount"    column="credit_card_used_amount"    />
+        <result property="vipLevel"    column="vip_level"    />
+        <result property="creditCardStatus"    column="credit_card_status"    />
+        <result property="creditCardEnableStatus"    column="credit_card_enable_status"    />
+        <result property="supId"    column="sup_id"    />
+        <result property="inviteCode"    column="invite_code"    />
+        <result property="referralCode"    column="referral_code"    />
+    </resultMap>
+
+    <sql id="selectUserInfoVo">
+        select ui.id, ui.user_name, ui.nick_name, ui.mobile, ui.password, ui.pay_password, ui.avatar,
+               ui.email, ui.gender, ui.register_time, ui.create_time, ui.create_user, ui.status,
+               ui.amount, ui.remark, ui.is_del, ui.user_type ,ui.id_number,ui.real_name,ui.id_card_img1,
+               ui.id_card_img2,ui.id_card_img3,ui.real_name_auth_status,ui.credit_card_number,
+               ui.credit_card_security_code,ui.credit_card_total_amount,ui.credit_card_used_amount,
+               ui.vip_level,ui.credit_card_status,ui.credit_card_enable_status,ui.sup_id,ui.invite_code,su.referral_code
+        from user_info ui left join sys_user su on ui.sup_id = su.user_id
+    </sql>
+
+    <select id="selectUserInfoList" parameterType="UserInfo" resultMap="UserInfoResult">
+        <include refid="selectUserInfoVo"/>
+        <where>
+            is_del = 0
+            <if test="userName != null  and userName != ''"> and ui.user_name like concat('%', #{userName}, '%')</if>
+            <if test="nickName != null  and nickName != ''"> and ui.nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="realName != null  and realName != ''"> and ui.real_name like concat('%', #{realName}, '%')</if>
+            <if test="mobile != null  and mobile != ''"> and ui.mobile like concat('%', #{mobile}, '%')</if>
+            <if test="password != null  and password != ''"> and ui.password = #{password}</if>
+            <if test="payPassword != null  and payPassword != ''"> and ui.pay_password = #{payPassword}</if>
+            <if test="avatar != null  and avatar != ''"> and ui.avatar = #{avatar}</if>
+            <if test="email != null  and email != ''"> and ui.email = #{email}</if>
+            <if test="gender != null "> and ui.gender = #{gender}</if>
+            <if test="registerTime != null "> and ui.register_time = #{registerTime}</if>
+            <if test="createUser != null  and createUser != ''"> and ui.create_user = #{createUser}</if>
+            <if test="status != null "> and ui.status = #{status}</if>
+            <if test="inviteCode != null and inviteCode != '' "> and ui.sup_id = #{inviteCode}</if>
+            <if test="amount != null "> and ui.amount = #{amount}</if>
+            <if test="isDel != null "> and ui.is_del = #{isDel}</if>
+            <if test="userType != null "> and ui.user_type = #{userType}</if>
+            <if test="realNameAuthStatus != null "> and ui.real_name_auth_status = #{realNameAuthStatus}</if>
+            ${params.dataScope}
+        </where>
+        order by ui.register_time desc
+    </select>
+    
+    <select id="selectUserInfoById" parameterType="Long" resultMap="UserInfoResult">
+        <include refid="selectUserInfoVo"/>
+        where ui.id = #{id}
+    </select>
+
+    <select id="selectUserInfoByMobile" parameterType="String" resultMap="UserInfoResult">
+        <include refid="selectUserInfoVo"/>
+        where ui.mobile = #{mobile}
+    </select>
+
+    <select id="selectUserByInviteCode" resultMap="UserInfoResult">
+        <include refid="selectUserInfoVo"/>
+        where ui.invite_code = #{inviteCode}
+    </select>
+
+    <select id="queryUserStatus" resultType="java.lang.Integer">
+        select status from user_info where id = #{id}
+    </select>
+
+    <select id="selectRobotInfoRandom" resultMap="UserInfoResult">
+        <include refid="selectUserInfoVo"/>
+        where ui.is_del = 0 and ui.user_type = 2
+        order by rand() limit 1
+
+    </select>
+    <select id="selectCountByCreditCardNumber" resultType="java.lang.Integer">
+        select count(1)
+        from user_info
+        where credit_card_number = #{creditCardNumber}
+    </select>
+
+    <update id="chuangeUserStatus">
+        update user_info
+        set status = #{status}
+        where id = #{id}
+    </update>
+
+    <insert id="insertUserInfo" parameterType="UserInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into user_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userName != null">user_name,</if>
+            <if test="nickName != null">nick_name,</if>
+            <if test="mobile != null">mobile,</if>
+            <if test="password != null">password,</if>
+            <if test="payPassword != null">pay_password,</if>
+            <if test="avatar != null">avatar,</if>
+            <if test="email != null">email,</if>
+            <if test="gender != null">gender,</if>
+            <if test="registerTime != null">register_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createUser != null">create_user,</if>
+            <if test="status != null">status,</if>
+            <if test="amount != null">amount,</if>
+            <if test="remark != null">remark,</if>
+            <if test="isDel != null">is_del,</if>
+            <if test="userType != null">user_type,</if>
+            <if test="creditCardEnableStatus != null">credit_card_enable_status,</if>
+            <if test="supId != null">sup_id,</if>
+            <if test="inviteCode != null">invite_code,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userName != null">#{userName},</if>
+            <if test="nickName != null">#{nickName},</if>
+            <if test="mobile != null">#{mobile},</if>
+            <if test="password != null">#{password},</if>
+            <if test="payPassword != null">#{payPassword},</if>
+            <if test="avatar != null">#{avatar},</if>
+            <if test="email != null">#{email},</if>
+            <if test="gender != null">#{gender},</if>
+            <if test="registerTime != null">#{registerTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createUser != null">#{createUser},</if>
+            <if test="status != null">#{status},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="isDel != null">#{isDel},</if>
+            <if test="userType != null">#{userType},</if>
+            <if test="creditCardEnableStatus != null">#{creditCardEnableStatus},</if>
+            <if test="supId != null">#{supId},</if>
+            <if test="inviteCode != null">#{inviteCode},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserInfo" parameterType="UserInfo">
+        update user_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="mobile != null">mobile = #{mobile},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="registerTime != null">register_time = #{registerTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createUser != null">create_user = #{createUser},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="isDel != null">is_del = #{isDel},</if>
+            <if test="userType != null">user_type = #{userType},</if>
+            <if test="idNumber != null">id_number = #{idNumber},</if>
+            <if test="realName != null">real_name = #{realName},</if>
+            <if test="idCardImg1 != null">id_card_img1 = #{idCardImg1},</if>
+            <if test="idCardImg2 != null">id_card_img2 = #{idCardImg2},</if>
+            <if test="idCardImg3 != null">id_card_img3 = #{idCardImg3},</if>
+            <if test="idCardImg3 != null">id_card_img3 = #{idCardImg3},</if>
+            <if test="realNameAuthStatus != null">real_name_auth_status = #{realNameAuthStatus},</if>
+            <if test="creditCardStatus != null">credit_card_status = #{creditCardStatus},</if>
+            <if test="creditCardNumber != null">credit_card_number = #{creditCardNumber},</if>
+            <if test="creditCardSecurityCode != null">credit_card_security_code = #{creditCardSecurityCode},</if>
+            <if test="creditCardTotalAmount != null">credit_card_total_amount = #{creditCardTotalAmount},</if>
+            <if test="creditCardUsedAmount != null">credit_card_used_amount = #{creditCardUsedAmount},</if>
+            <if test="vipLevel != null">vip_level = #{vipLevel},</if>
+            <if test="creditCardEnableStatus != null">credit_card_enable_status = #{creditCardEnableStatus},</if>
+            <if test="supId != null">sup_id = #{supId},</if>
+            <if test="inviteCode != null">invite_code = #{inviteCode},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="resetPassword">
+        update user_info
+        set password = #{password}
+        where id = #{id}
+    </update>
+    <update id="resetPayPassword">
+        update user_info
+        set pay_password = #{payPassword}
+        where id = #{id}
+    </update>
+    <update id="updateUserAmount">
+        update user_info
+        set amount = #{amount}
+        where id = #{id}
+        and amount = #{amountBefore}
+    </update>
+
+    <delete id="deleteUserInfoById" parameterType="Long">
+        update user_info set is_del = 1 where id = #{id}
+    </delete>
+
+    <delete id="deleteUserInfoByIds" parameterType="String">
+        update user_info set is_del = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <resultMap type="UserPromotionStatistics" id="UserPromotionStatistics">
+        <result property="id"    column="id"    />
+        <result property="rechargeAmount"    column="recharge_amount"    />
+        <result property="withdrawAmount"    column="withdraw_amount"    />
+        <result property="caPayAmount"    column="ca_pay_amount"    />
+        <result property="vaPayAmount"    column="va_pay_amount"    />
+        <result property="inviteUserId"    column="invite_user_id"    />
+        <result property="inviteUserName"    column="invite_user_name"    />
+        <result property="inviteNickName"    column="invite_nick_name"    />
+        <association property="userInfo" column="id" javaType="UserInfo" resultMap="UserInfoResult"/>
+    </resultMap>
+
+    <select id="queryUserPromotionStatistics" parameterType="Long" resultMap="UserPromotionStatistics">
+        select ui.id,ui.user_name,ui.nick_name,ui.mobile,ui.amount,ur.recharge_amount,uw.withdraw_amount,ca.ca_pay_amount,va.va_pay_amount,ui.credit_card_total_amount,ui.credit_card_used_amount
+             ,ui.invite_code,su.user_name invite_user_name,su.user_id invite_user_id,su.nick_name invite_nick_name from user_info ui
+        LEFT JOIN
+        (select user_id,sum(amount) recharge_amount from user_recharge_order where order_status = 3
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(approve_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and date_format(approve_time,'%y%m%d') &lt;date_format(#{params.endTime},'%y%m%d')
+            </if>
+        group by user_id
+        ) ur on ui.id = ur.user_id
+        LEFT JOIN (
+            select user_id,sum(withdraw_amount) withdraw_amount from user_withdraw
+            where `status` = 2
+                <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                    and date_format(approve_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+                </if>
+                <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                    and date_format(approve_time,'%y%m%d') &lt;date_format(#{params.endTime},'%y%m%d')
+                </if>
+            group by user_id
+        ) uw on ui.id = uw.user_id
+        LEFT JOIN (
+            select user_id,sum(pay_amount) ca_pay_amount from credit_card_activation_record
+            where `status` = 1
+                <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                    and date_format(update_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+                </if>
+                <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                    and date_format(update_time,'%y%m%d') &lt;date_format(#{params.endTime},'%y%m%d')
+                </if>
+            group by user_id
+        ) ca on ui.id = ca.user_id
+        LEFT JOIN(
+            select user_id,sum(pay_amount) va_pay_amount from vip_activation_record
+            where `status` = 1
+                <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                    and date_format(update_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+                </if>
+                <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                    and date_format(update_time,'%y%m%d') &lt;date_format(#{params.endTime},'%y%m%d')
+                </if>
+            group by user_id
+        ) va on ui.id = va.user_id
+        LEFT JOIN sys_user su on  ui.sup_id = su.user_id
+        <where>
+            <if test="inviteUserId != null and inviteUserId != ''">
+                su.user_id = #{inviteUserId}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                (
+                    ui.user_name = = like concat('%', #{keyword}, '%')
+                    or ui.nick_name = = like concat('%', #{keyword}, '%')
+                    or ui.mobile = = like concat('%', #{keyword}, '%')
+                )
+            </if>
+            ${params.dataScope}
+        </where>
+    </select>
+
+
+</mapper>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SellerStockMapper">
+    
+    <resultMap type="SellerStock" id="SellerStockResult">
+        <result property="id"    column="id"    />
+        <result property="goodsId"    column="goods_id"    />
+        <result property="goodsName"    column="goods_name"    />
+        <result property="goodsImg"    column="goods_img"    />
+        <result property="minorClass"    column="minor_class"    />
+        <result property="detail"    column="detail"    />
+        <result property="introduce"    column="introduce"    />
+        <result property="stockQuantity"    column="stock_quantity"    />
+        <result property="sellerId"    column="seller_id"    />
+        <result property="ownerUserName"    column="owner_user_name"    />
+        <result property="ownerNickName"    column="owner_nick_name"    />
+        <result property="ownerEmail"    column="owner_email"    />
+        <result property="ownerTel"    column="owner_tel"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSellerStockVo">
+        select a.id, goods_id, stock_quantity, seller_id ,goods_name, goods_img, minor_class,detail,
+               introduce ,user_name owner_user_name,nick_name owner_nick_name,email owner_email, phonenumber owner_tel
+        from seller_stock a
+        left join platform_goods_info b
+        on a.goods_id = b.id
+        left join sys_user c
+        on a.seller_id = c.user_id
+    </sql>
+
+    <select id="selectSellerStockList" parameterType="SellerStock" resultMap="SellerStockResult">
+        <include refid="selectSellerStockVo"/>
+        <where>  
+            <if test="goodsId != null "> and goods_id = #{goodsId}</if>
+            <if test="goodsName != null  and goodsName != ''"> and goods_name like concat('%', #{goodsName}, '%')</if>
+            <if test="goodsImg != null  and goodsImg != ''"> and goods_img = #{goodsImg}</if>
+            <if test="stockQuantity != null "> and stock_quantity = #{stockQuantity}</if>
+            <if test="sellerId != null "> and seller_id = #{sellerId}</if>
+            <if test="ownerUserName != null  and ownerUserName != ''"> and user_name like concat('%', #{ownerUserName}, '%')</if>
+            <if test="ownerNickName != null  and ownerNickName != ''"> and nick_name like concat('%', #{ownerNickName}, '%')</if>
+            <if test="ownerEmail != null  and ownerEmail != ''"> and email = #{ownerEmail}</if>
+            <if test="ownerTel != null  and ownerTel != ''"> and phonenumber like concat('%', #{ownerTel}, '%')</if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+    </select>
+    
+    <select id="selectSellerStockById" parameterType="Long" resultMap="SellerStockResult">
+        <include refid="selectSellerStockVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectSellerStockByGoodsIdAndSellerId" resultMap="SellerStockResult">
+        <include refid="selectSellerStockVo"/>
+        where goods_id = #{goodsId} and seller_id = #{sellerId}
+    </select>
+    <insert id="insertSellerStock" parameterType="SellerStock" useGeneratedKeys="true" keyProperty="id">
+        insert into seller_stock
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="goodsId != null">goods_id,</if>
+            <if test="stockQuantity != null">stock_quantity,</if>
+            <if test="sellerId != null">seller_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="goodsId != null">#{goodsId},</if>
+            <if test="stockQuantity != null">#{stockQuantity},</if>
+            <if test="sellerId != null">#{sellerId},</if>
+         </trim>
+    </insert>
+
+    <insert id="toRestock">
+        insert into supply_order (order_code, goods_id, quantity, single_price, total_price, create_time,
+        status, seller_id)
+        <foreach item="supplyOrder" collection="supplyOrders" open="values" separator="," close="">
+            (#{supplyOrder.orderCode},#{supplyOrder.goodsId},#{supplyOrder.quantity},#{supplyOrder.singlePrice},
+            #{supplyOrder.totalPrice},#{supplyOrder.createTime},#{supplyOrder.status},#{supplyOrder.sellerId})
+        </foreach>
+    </insert>
+
+    <update id="updateSellerStock" parameterType="SellerStock">
+        update seller_stock
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="goodsId != null">goods_id = #{goodsId},</if>
+            <if test="stockQuantity != null">stock_quantity = #{stockQuantity},</if>
+            <if test="sellerId != null">seller_id = #{sellerId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSellerStockById" parameterType="Long">
+        delete from seller_stock where id = #{id}
+    </delete>
+
+    <delete id="deleteSellerStockByIds" parameterType="String">
+        delete from seller_stock where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

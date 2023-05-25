@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.customer.mapper.ApiUserFavoriteGoodsMapper">
+    
+    <resultMap type="ApiUserFavoriteGoods" id="UserFavoriteGoodsResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="shopGoodsInfoId"    column="shop_goods_info_id"    />
+        <result property="shopId"    column="shop_id"    />
+        <result property="shopName"    column="shop_name"    />
+        <result property="shopLogo"    column="shop_logo"    />
+        <result property="goodsId"    column="goods_id"    />
+        <result property="goodsName"    column="goods_name"    />
+        <result property="goodsImg"    column="goods_img"    />
+        <result property="minorClass"    column="minor_class"    />
+        <result property="introduce"    column="introduce"    />
+        <result property="detail"    column="detail"    />
+        <result property="singlePrice"    column="single_price"    />
+        <result property="discountPrice"    column="discount_price"    />
+        <result property="detail"    column="shop_logo"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectUserFavoriteGoodsVo">
+        select a.id, user_id, shop_goods_info_id,a.status,shop_id,shop_name,shop_logo,goods_id,
+               goods_name,goods_img,minor_class,introduce, detail,single_price,b.discount_price
+        from user_favorite_goods a
+                 left join shop_goods_info b
+                           on b.id = a.shop_goods_info_id
+                 left join shop_info c
+                           on c.id = shop_id
+                 left join platform_goods_info d
+                           on d.id = goods_id
+    </sql>
+
+    <select id="selectUserFavoriteGoodsList" parameterType="ApiUserFavoriteGoods" resultMap="UserFavoriteGoodsResult">
+        <include refid="selectUserFavoriteGoodsVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="shopGoodsInfoId != null "> and shop_goods_info_id = #{shopGoodsInfoId}</if>
+            <if test="status != null "> and a.status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserFavoriteGoodsById" parameterType="Long" resultMap="UserFavoriteGoodsResult">
+        <include refid="selectUserFavoriteGoodsVo"/>
+        where a.id = #{id}
+    </select>
+
+    <select id="selectUserFavoriteGoods"  resultMap="UserFavoriteGoodsResult">
+        <include refid="selectUserFavoriteGoodsVo"/>
+        where user_id = #{userId} and shop_goods_info_id = #{shopGoodsInfoId}
+    </select>
+    <select id="selectFavoriteQuantityByShopGoodsInfoId" resultType="java.lang.Integer">
+        select count(1) from user_favorite_goods where shop_goods_info_id = #{shopGoodsInfoId}
+    </select>
+
+    <insert id="insertUserFavoriteGoods" parameterType="ApiUserFavoriteGoods" useGeneratedKeys="true" keyProperty="id">
+        insert into user_favorite_goods
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="shopGoodsInfoId != null">shop_goods_info_id,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="shopGoodsInfoId != null">#{shopGoodsInfoId},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserFavoriteGoods" parameterType="ApiUserFavoriteGoods">
+        update user_favorite_goods
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="shopGoodsInfoId != null">shop_goods_info_id = #{shopGoodsInfoId},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserFavoriteGoodsById" parameterType="Long">
+        delete from user_favorite_goods where id = #{id}
+    </delete>
+
+    <delete id="deleteUserFavoriteGoodsByIds" parameterType="String">
+        delete from user_favorite_goods where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
