@@ -3,6 +3,7 @@ package com.ruoyi.system.service.impl;
 import cn.hutool.json.JSONUtil;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.utils.spring.PropertyUtil;
 import com.ruoyi.system.domain.LangMgr;
 import com.ruoyi.system.domain.Language;
 import com.ruoyi.system.mapper.LangMgrMapper;
@@ -187,6 +188,7 @@ public class LangMgrServiceImpl implements ILangMgrService
                 }
                 fileOutputStream = new FileOutputStream(url);
                 properties.store(fileOutputStream,null);
+                PropertyUtil.initCache(abbreviations);
             } catch (Exception e) {
                 System.out.println(url+"的语言包更新异常");
             }finally {
@@ -222,6 +224,7 @@ public class LangMgrServiceImpl implements ILangMgrService
             }
             fileOutputStream = new FileOutputStream(url);
             properties.store(fileOutputStream,null);
+            PropertyUtil.initCache("all");
         } catch (Exception e) {
             System.out.println(url+"的语言包更新异常");
         }finally {

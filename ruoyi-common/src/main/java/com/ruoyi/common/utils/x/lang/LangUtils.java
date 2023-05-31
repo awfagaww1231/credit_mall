@@ -3,6 +3,7 @@ package com.ruoyi.common.utils.x.lang;
 
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONUtil;
+import cn.hutool.setting.dialect.Props;
 import com.ruoyi.common.constant.LangMgr;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.ServletUtils;
@@ -14,9 +15,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
+import java.nio.charset.StandardCharsets;
 
 @Component
 public class LangUtils {
@@ -76,13 +75,15 @@ public class LangUtils {
     //根据key获取语言值
     public static String getLangMgrValue(String hKey){
 
-        FileInputStream fileInputStream = null;
-        String url = "ruoyi-admin/src/main/resources/lang/all.properties";
+//        FileInputStream fileInputStream = null;
+//        String url = "ruoyi-admin/src/main/resources/lang/all.properties";
         try {
-            Properties properties = new Properties();
-            fileInputStream = new FileInputStream(url);
-            properties.load(fileInputStream);
-            String property = properties.getProperty(hKey);
+//            Properties properties = new Properties();
+//            fileInputStream = new FileInputStream(url);
+//            properties.load(fileInputStream);
+//            String property = properties.getProperty(hKey);
+            Props props = new Props("lang/all.properties", StandardCharsets.UTF_8);
+            String property = props.getProperty(hKey);
             JSON parse = JSONUtil.parse(property);
             LangMgr langMgr = parse.toBean(LangMgr.class);
             if (langMgr != null){
@@ -109,14 +110,14 @@ public class LangUtils {
                 }
             }
             return "";
-        }finally {
-            if (fileInputStream != null){
-                try {
-                    fileInputStream.close();
-                } catch (IOException e) {
-                    System.out.println(url+"IO流读取后关闭异常");
-                }
-            }
+//        }finally {
+//            if (fileInputStream != null){
+//                try {
+//                    fileInputStream.close();
+//                } catch (IOException e) {
+//                    System.out.println(url+"IO流读取后关闭异常");
+//                }
+//            }
         }
     }
 
