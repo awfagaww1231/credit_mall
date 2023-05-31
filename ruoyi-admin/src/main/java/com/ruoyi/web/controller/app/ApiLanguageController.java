@@ -5,7 +5,6 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.common.utils.x.lang.LangUtils;
 import com.ruoyi.system.domain.LangMgr;
 import com.ruoyi.system.domain.Language;
 import com.ruoyi.system.service.ILangMgrService;
@@ -56,7 +55,6 @@ public class ApiLanguageController extends BaseController
      */
     @RequestMapping("/getLangMgrs")
     public AjaxResult getLangMgrs(String lang) {
-        String langMgrValue = LangUtils.getLangMgrValue("hint_1");
         if (StringUtils.isEmpty(lang)){
             lang = "zh";
         }
