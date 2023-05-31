@@ -98,6 +98,16 @@ public class LangMgr extends BaseEntity
     @Excel(name = "意大利")
     private String it;
 
+    //类型 ：0：前端语言包 1：后端提示语言
+    private Integer type;
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
     public void setId(Long id) 
     {
         this.id = id;

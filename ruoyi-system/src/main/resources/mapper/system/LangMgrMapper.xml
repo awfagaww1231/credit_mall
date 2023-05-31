@@ -27,10 +27,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="ar"    column="AR"    />
         <result property="it"    column="IT"    />
         <result property="remark"    column="remark"    />
+        <result property="type"    column="type"    />
     </resultMap>
 
     <sql id="selectLangMgrVo">
-        select id, lang_key, ZH, EN, TC, DE, ES, FR, IDN, JP, KO, MY, TH, VI, PT, RUS, BLR, IDA, SA, AR, IT, remark from lang_mgr
+        select id, lang_key, ZH, EN, TC, DE, ES, FR, IDN, JP, KO, MY, TH, VI, PT, RUS, BLR, IDA, SA, AR, IT, remark,type from lang_mgr
     </sql>
 
     <select id="selectLangMgrList" parameterType="LangMgr" resultMap="LangMgrResult">

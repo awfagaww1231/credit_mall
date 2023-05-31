@@ -5,13 +5,16 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.system.domain.Language;
 import com.ruoyi.system.service.ILanguageService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * 国家语言Controller
@@ -45,9 +48,26 @@ public class ApiLanguageController extends BaseController
      */
     @RequestMapping("/getLangMgrs")
     public AjaxResult getLangMgrs(String lang) {
-        if (StringUtils.isBlank(lang)){
-            lang = "zh";
+        FileInputStream fileInputStream = null;
+        String url = "ruoyi-admin/src/main/resources/lang/"+lang+".properties";
+        try {
+            Properties properties = new Properties();
+            fileInputStream = new FileInputStream(url);
+            properties.load(fileInputStream);
+//            props = new Props("lang/"+lang+".properties", StandardCharsets.UTF_8);
+            return AjaxResult.success(properties);
+        } catch (Exception e) {
+            //如果出现异常则用redis的缓存语言包
+            Map<String, Object> cacheMap = redisCache.getCacheMap("appLangMgrs/" + lang);
+            return AjaxResult.success(cacheMap);
+        }finally {
+            if (fileInputStream != null){
+                try {
+                    fileInputStream.close();
+                } catch (IOException e) {
+                    System.out.println(url+"IO流读取后关闭异常");
+                }
+            }
         }
-        return AjaxResult.success(redisCache.getCacheMap("appLangMgrs/"+lang));
     }
 }
