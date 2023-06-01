@@ -3,6 +3,7 @@ package com.ruoyi.system.service.impl;
 import cn.hutool.json.JSONUtil;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.utils.ExceptionUtil;
 import com.ruoyi.common.utils.spring.PropertyUtil;
 import com.ruoyi.system.domain.LangMgr;
 import com.ruoyi.system.domain.Language;
@@ -153,10 +154,13 @@ public class LangMgrServiceImpl implements ILangMgrService
 
         //启用的语言列表
         List<Language> languages = languageMapper.selectLanguageList(language);
+
+        //语言包存放文件夹路径
+        String dirPath = System.getProperty("user.dir")+"\\lang\\";
+
         for (int i = 0; i < languages.size(); i++) {
             //缓存到properties文件
             Properties properties = new Properties();
-
             //app调用语言包
             HashMap<String, String> appMap = new HashMap<>();
             //lang:语言标识
@@ -180,16 +184,23 @@ public class LangMgrServiceImpl implements ILangMgrService
 
             //缓存到properties文件
             FileOutputStream fileOutputStream = null;
-            String url = "ruoyi-admin/src/main/resources/lang/"+abbreviations+".properties";
+            String url = dirPath + abbreviations+".properties";
+
+//            String url = "ruoyi-admin/src/main/resources/lang/"+abbreviations+".properties";
             try {
+                File filePath = new File(dirPath);
+                if (!filePath.exists()){
+                    filePath.mkdirs();
+                }
                 File file = new File(url);
                 if (!file.exists()){
                     file.createNewFile();
                 }
                 fileOutputStream = new FileOutputStream(url);
                 properties.store(fileOutputStream,null);
-                PropertyUtil.initCache(abbreviations);
+                PropertyUtil.initCache(url);
             } catch (Exception e) {
+                System.out.println(ExceptionUtil.getExceptionMessage(e));
                 System.out.println(url+"的语言包更新异常");
             }finally {
                 if (fileOutputStream != null){
@@ -216,15 +227,20 @@ public class LangMgrServiceImpl implements ILangMgrService
         }
         //缓存到properties文件
         FileOutputStream fileOutputStream = null;
-        String url = "ruoyi-admin/src/main/resources/lang/all.properties";
+//        String url = "ruoyi-admin/src/main/resources/lang/all.properties";
+        String url = dirPath + "all.properties";
         try {
+            File filePath = new File(dirPath);
+            if (!filePath.exists()){
+                filePath.mkdirs();
+            }
             File file = new File(url);
             if (!file.exists()){
                 file.createNewFile();
             }
             fileOutputStream = new FileOutputStream(url);
             properties.store(fileOutputStream,null);
-            PropertyUtil.initCache("all");
+            PropertyUtil.initCache(url);
         } catch (Exception e) {
             System.out.println(url+"的语言包更新异常");
         }finally {

@@ -82,7 +82,11 @@ public class LangUtils {
 //            fileInputStream = new FileInputStream(url);
 //            properties.load(fileInputStream);
 //            String property = properties.getProperty(hKey);
-            Props props = new Props("lang/all.properties", StandardCharsets.UTF_8);
+            //语言包存放文件夹路径
+            String dirPath = System.getProperty("user.dir")+"\\lang\\";
+            String path = dirPath + "all.properties";
+            Props props = new Props(path, StandardCharsets.UTF_8);
+//            Props props = new Props("lang/all.properties", StandardCharsets.UTF_8);
             String property = props.getProperty(hKey);
             JSON parse = JSONUtil.parse(property);
             LangMgr langMgr = parse.toBean(LangMgr.class);
