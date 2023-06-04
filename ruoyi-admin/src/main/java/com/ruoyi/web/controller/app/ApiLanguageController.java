@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.app;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.Language;
 import com.ruoyi.system.service.ILanguageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 国家语言Controller
@@ -44,11 +46,10 @@ public class ApiLanguageController extends BaseController
      */
     @RequestMapping("/getLangMgrs")
     public AjaxResult getLangMgrs(String lang) {
-        return AjaxResult.error("aa","hint_1");
-//        if (StringUtils.isEmpty(lang)){
-//            lang = "zh";
-//        }
-//        Map<String, Object> cacheMap = redisCache.getCacheMap("appLangMgrs/" + lang);
-//        return AjaxResult.success(cacheMap);
+        if (StringUtils.isEmpty(lang)){
+            lang = "zh";
+        }
+        Map<String, Object> cacheMap = redisCache.getCacheMap("appLangMgrs/" + lang);
+        return AjaxResult.success(cacheMap);
     }
 }
