@@ -1,10 +1,7 @@
 package com.ruoyi.system.service.impl;
 
-import cn.hutool.json.JSONUtil;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.redis.RedisCache;
-import com.ruoyi.common.utils.ExceptionUtil;
-import com.ruoyi.common.utils.spring.PropertyUtil;
 import com.ruoyi.system.domain.LangMgr;
 import com.ruoyi.system.domain.Language;
 import com.ruoyi.system.mapper.LangMgrMapper;
@@ -15,15 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.stream.Collectors;
 
 /**
  * 多语言配置包Service业务层处理
@@ -147,20 +138,15 @@ public class LangMgrServiceImpl implements ILangMgrService
         List<LangMgr> langMgrs = langMgrMapper.selectLangMgrList(null);
 
         //app静态语言包
-        List<LangMgr> appLangMgrs = langMgrs.stream().filter(a -> a.getType() == 0).collect(Collectors.toList());
+//        List<LangMgr> appLangMgrs = langMgrs.stream().filter(a -> a.getType() == 0).collect(Collectors.toList());
+        List<LangMgr> appLangMgrs = langMgrs;
 
         Language language = new Language();
         language.setStatus(0);
 
         //启用的语言列表
         List<Language> languages = languageMapper.selectLanguageList(language);
-
-        //语言包存放文件夹路径
-        String dirPath = System.getProperty("user.dir")+"\\lang\\";
-
         for (int i = 0; i < languages.size(); i++) {
-            //缓存到properties文件
-            Properties properties = new Properties();
             //app调用语言包
             HashMap<String, String> appMap = new HashMap<>();
             //lang:语言标识
@@ -173,84 +159,17 @@ public class LangMgrServiceImpl implements ILangMgrService
                     value = String.valueOf(o);
                 }
                 appMap.put(langMgr.getLangKey(), value);
-
-                ////缓存到properties文件
-                properties.setProperty(langMgr.getLangKey(),value);
             }
             //清空redis语言包缓存
             redisCache.cleanCacheMap("appLangMgrs/"+abbreviations);
             //app调用语言包
             redisCache.setCacheMap("appLangMgrs/"+abbreviations,appMap);
-
-            //缓存到properties文件
-            FileOutputStream fileOutputStream = null;
-            String url = dirPath + abbreviations+".properties";
-
-//            String url = "ruoyi-admin/src/main/resources/lang/"+abbreviations+".properties";
-            try {
-                File filePath = new File(dirPath);
-                if (!filePath.exists()){
-                    filePath.mkdirs();
-                }
-                File file = new File(url);
-                if (!file.exists()){
-                    file.createNewFile();
-                }
-                fileOutputStream = new FileOutputStream(url);
-                properties.store(fileOutputStream,null);
-                PropertyUtil.initCache(url);
-            } catch (Exception e) {
-                System.out.println(ExceptionUtil.getExceptionMessage(e));
-                System.out.println(url+"的语言包更新异常");
-            }finally {
-                if (fileOutputStream != null){
-                    try {
-                        fileOutputStream.close();
-                    } catch (IOException e) {
-                        System.out.println(url+"的IO输出流关闭异常");
-                    }
-                }
-            }
         }
 
-        //清空redis语言包缓存
-        redisCache.cleanCacheMap("langMgrs");
-        //后端提示语言包语言包
-        Map<String, LangMgr> webLangMgrs = langMgrs.stream().filter(a -> a.getType() == 1).collect(Collectors.toMap(LangMgr::getLangKey, LangMgr -> LangMgr));
-        redisCache.setCacheMap("langMgrs",webLangMgrs);
-        //缓存到properties文件
-        Properties properties = new Properties();
-
-        for (Map.Entry<String, LangMgr> entry : webLangMgrs.entrySet()) {
-            //缓存到properties文件
-            properties.setProperty(entry.getKey(), JSONUtil.toJsonStr(entry.getValue()));
-        }
-        //缓存到properties文件
-        FileOutputStream fileOutputStream = null;
-//        String url = "ruoyi-admin/src/main/resources/lang/all.properties";
-        String url = dirPath + "all.properties";
-        try {
-            File filePath = new File(dirPath);
-            if (!filePath.exists()){
-                filePath.mkdirs();
-            }
-            File file = new File(url);
-            if (!file.exists()){
-                file.createNewFile();
-            }
-            fileOutputStream = new FileOutputStream(url);
-            properties.store(fileOutputStream,null);
-            PropertyUtil.initCache(url);
-        } catch (Exception e) {
-            System.out.println(url+"的语言包更新异常");
-        }finally {
-            if (fileOutputStream != null){
-                try {
-                    fileOutputStream.close();
-                } catch (IOException e) {
-                    System.out.println(url+"的IO输出流关闭异常");
-                }
-            }
-        }
+//        //清空redis语言包缓存
+//        redisCache.cleanCacheMap("langMgrs");
+//        //后端提示语言包语言包
+//        Map<String, LangMgr> webLangMgrs = langMgrs.stream().filter(a -> a.getType() == 1).collect(Collectors.toMap(LangMgr::getLangKey, LangMgr -> LangMgr));
+//        redisCache.setCacheMap("langMgrs",webLangMgrs);
     }
 }

@@ -139,13 +139,13 @@ public class AjaxResult extends HashMap<String, Object>
      */
     public static AjaxResult error(String msg,String key)
     {
-        if (StringUtils.isNotEmpty(key)){
-            String langMgrValue = LangUtils.getLangMgrValue(key);
-            if (StringUtils.isNotEmpty(langMgrValue)){
-                return  new AjaxResult(HttpStatus.ERROR, langMgrValue);
-            }
-        }
-        return new AjaxResult(HttpStatus.ERROR, msg);
+//        if (StringUtils.isNotEmpty(key)){
+//            String langMgrValue = LangUtils.getLangMgrValue(key);
+//            if (StringUtils.isNotEmpty(langMgrValue)){
+//                return new AjaxResult(HttpStatus.ERROR, langMgrValue).put("key",key);
+//            }
+//        }
+        return new AjaxResult(HttpStatus.ERROR, msg).put("key",key);
     }
 
 

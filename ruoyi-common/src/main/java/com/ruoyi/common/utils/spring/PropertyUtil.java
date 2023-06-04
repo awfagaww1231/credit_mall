@@ -4,7 +4,6 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.net.URL;
 
@@ -14,8 +13,8 @@ public class PropertyUtil {
     private PropertyUtil() {
     }
 
-    public static PropertiesConfiguration getProps(String url){
-        return init(url);
+    public static PropertiesConfiguration getProps(String propertiesFile){
+        return init(propertiesFile);
     }
     /**
      * 初始化
@@ -25,7 +24,7 @@ public class PropertyUtil {
     private static PropertiesConfiguration init(String propertiesFile) {
         PropertiesConfiguration  PropertyUtil = null;
         try {
-            File file = new File(propertiesFile);
+//            File file = new File(propertiesFile);
             PropertyUtil = new PropertiesConfiguration(propertiesFile);
             //自动重新加载
             PropertyUtil.setReloadingStrategy(new FileChangedReloadingStrategy());
